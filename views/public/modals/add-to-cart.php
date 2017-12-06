@@ -22,13 +22,6 @@
   </div>
 </div>
 
-<script>
-jQuery(document).ready(function($) {
-  $('#modal-create-cart').on('hidden.bs.modal', function (e) {
-    console.log("modal closed !");
-  });
-});
-</script>
 
 <style>
 #modal-add-to-cart a.add {

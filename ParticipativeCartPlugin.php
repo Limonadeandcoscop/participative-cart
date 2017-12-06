@@ -54,8 +54,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
           `order` int(3) unsigned NOT NULL,
           `name` mediumtext NOT NULL,
           `description` text,
-          `note` text,
-          `public` varchar(20) NOT NULL DEFAULT 'waiting',
+          `status` varchar(20) NOT NULL DEFAULT 'waiting',
           `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
           UNIQUE KEY `id` (`id`)
@@ -80,14 +79,9 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookPublicHead($args) {
 
-        $args['view']->headlink()->prependStylesheet("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"); // Boostrap 4
-        echo '<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>';
-        echo '<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>';
-        echo '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>';
-        queue_css_file('participative_cart');
-        queue_js_file('participative_cart');
+        queue_css_file(array('bootstrap.min', 'participative_cart'));
+        queue_js_file(array('validate.min', 'tether.min', 'bootstrap.min', 'participative_cart'));
     }
-
 
     /**
      * Add the routes for accessing cart functionalities
@@ -113,6 +107,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
     {
       echo get_view()->partial('modals/add-to-cart.php');
       echo get_view()->partial('modals/create-cart.php');
+      echo get_view()->partial('modals/create-cart-confirmation.php');
     }
 
 }

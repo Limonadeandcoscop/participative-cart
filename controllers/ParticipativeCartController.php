@@ -13,6 +13,11 @@
 
 class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_AbstractActionController {
 
+    /**
+     * @var User The current user
+     */
+    protected $_user;
+
     public function init() {
 
         $this->_helper->db->setDefaultModelName('ParticipativeCart');
@@ -21,9 +26,10 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $this->_helper->viewRenderer->setNoRender(true);
 
         // Redirect to homepage if the user is not logged in
-        if(!current_user()) {
+        if(!$this->_user = current_user()) {
             $this->redirect($_SERVER['HTTP_REFERER']);
         }
+
     }
 
 
@@ -57,7 +63,30 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function addCartAction() {
 
-        echo "Add a cart page";
+        if (!$this->_request->isXmlHttpRequest()) return;
+
+        $this->getResponse()->setHeader('Content-Type', 'application/json');
+
+        $json = array();
+
+        if (!($name = $this->getParam('name'))) {
+            $json['error'] = "The name is required";
+            echo json_encode($json); // Returns JSON {"error":"The name is required"}
+            return;
+        }
+
+        $cart = new ParticipativeCart();
+
+        $cart->user_id  = $this->_user->id;
+        $cart->order    = $cart::getNextOrder($this->_user);
+        $cart->name     = $name;
+        $cart->status   = $cart::CART_STATUS_WAITING;
+        $cart->save();
+
+        $json['status']  = 'ok';
+        $json['cart_id'] = $cart->id;
+
+        echo json_encode($json); // Returns JSON like {"status":"ok","cart_id":"15"}
     }
 
 

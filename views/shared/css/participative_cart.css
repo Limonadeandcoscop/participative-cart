@@ -18,3 +18,12 @@
   text-shadow: none;
   border:none;
 }
+
+.modal div.ajax-errors,
+.modal label.error {
+	width:max-content;
+	display: block;
+	margin:0 auto;
+	color:red;
+	border:1px solid red;
+}

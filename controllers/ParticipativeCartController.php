@@ -11,9 +11,10 @@
  */
 
 
-class ParticipativeCart_CartController extends Omeka_Controller_AbstractActionController {
+class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_AbstractActionController {
 
     public function init() {
+
         $this->_helper->db->setDefaultModelName('ParticipativeCart');
 
         // Disable view rendering
@@ -25,13 +26,76 @@ class ParticipativeCart_CartController extends Omeka_Controller_AbstractActionCo
         }
     }
 
+
     /**
-     * Index action
+     * Show all carts
      *
      * @return HTML
      */
     public function indexAction() {
 
+        echo "View call carts page";
+    }
+
+
+    /**
+     * Show a cart
+     *
+     * @param Integer $cart-id The ID of the cart
+     * @return HTML
+     */
+    public function viewCartAction() {
+
+        echo "View cart #".$this->getParam('cart-id');
+    }
+
+
+    /**
+     * Add a cart
+     *
+     * @return JSON
+     */
+    public function addCartAction() {
+
+        echo "Add a cart page";
+    }
+
+
+    /**
+     * Delete a cart
+     *
+     * @param Integer $cart-id The ID of the cart
+     * @return JSON
+     */
+    public function deleteCartAction() {
+
+        echo "Delete the cart #".$this->getParam('cart-id');
+    }
+
+
+    /**
+     * Add an item to a cart
+     *
+     * @param Integer $cart-id The ID of the cart
+     * @param Integer $item-id The ID of the item
+     * @return JSON
+     */
+    public function addItemAction() {
+
+        echo "Add item #".$this->getParam('item-id')." to cart #".$this->getParam('cart-id');
+    }
+
+
+    /**
+     * Delete an item from a cart
+     *
+     * @param Integer $cart-id The ID of the cart
+     * @param Integer $item-id The ID of the item
+     * @return JSON
+     */
+    public function deleteItemAction() {
+
+        echo "Delete item #".$this->getParam('item-id')." from cart #".$this->getParam('cart-id');
     }
 }
 

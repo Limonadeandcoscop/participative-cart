@@ -1,0 +1,20 @@
+
+/*
+ * Global modals styles (specific styles are in partials)
+ */
+
+.modal .modal-footer {
+  display:block;
+  margin:0 auto;
+}
+
+.modal select {
+  display:block;
+  margin:0 auto;
+}
+
+.modal a.close,
+.modal a.close:hover {
+  text-shadow: none;
+  border:none;
+}

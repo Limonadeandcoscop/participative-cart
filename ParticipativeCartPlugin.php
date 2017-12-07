@@ -60,6 +60,18 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
           UNIQUE KEY `id` (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $this->_db->query($sql);
+
+        $sql  = "
+        CREATE TABLE IF NOT EXISTS `{$this->_db->ParticipativeCartItems}` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `cart_id` int(10) unsigned NOT NULL,
+          `item_id` int(3) unsigned NOT NULL,
+          `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `id` (`id`)
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $this->_db->query($sql);
+
     }
 
 
@@ -80,7 +92,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookPublicHead($args) {
 
         queue_css_file(array('bootstrap.min', 'participative_cart'));
-        queue_js_file(array('validate.min', 'tether.min', 'bootstrap.min', 'participative_cart'));
+        queue_js_file(array('participative_cart', 'validate.min', 'tether.min', 'bootstrap.min'));
     }
 
     /**
@@ -102,12 +114,26 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
 
     /**
      * Hook for items/show page
+     *
+     * - Displays modal to create a new cart
+     * - Displays modal to add an item in the cart
      */
-    public function hookPublicItemsShow()
+    public function hookPublicItemsShow($args)
     {
-      echo get_view()->partial('modals/add-to-cart.php');
+      $item = $args['item'];
+
+      $participativeCartTable = get_db()->getTable('ParticipativeCart');
+      $carts = $participativeCartTable->getUserCarts();
+
+      foreach ($carts as $cart) {
+        if ($participativeCartTable->itemIsInCart($item->id, $cart->id)) {
+          $cart->contain_item = true;
+        }
+      }
+
+      echo get_view()->partial('modals/add-to-cart.php', null, array('carts' => $carts, 'item_id' => $item->id, 'table' => $participativeCartTable));
       echo get_view()->partial('modals/create-cart.php');
-      echo get_view()->partial('modals/create-cart-confirmation.php');
+      echo get_view()->partial('modals/create-cart-confirmation.php', null, array('item_id' => $item->id));
     }
 
 }

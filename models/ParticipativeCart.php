@@ -23,11 +23,19 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
     public $status;
     public $inserted;
 
+
+    // Status constants for a cart
     const CART_STATUS_WAITING   = 'waiting';
     const CART_STATUS_PUBLIC    = 'public';
     const CART_STATUS_PRIVATE   = 'private';
 
-    public static function getNextOrder($user) {
+
+    /**
+     * Get the next cart order of current user
+     *
+     * @return Integer The next order
+     */
+    public static function getNextOrder() {
 
         $user = current_user();
 
@@ -36,6 +44,9 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         $params['sort_dir']     = 'd';
 
         $carts = get_db()->getTable('ParticipativeCart')->findBy($params);
+
+        if (!$carts) return 1;
+
         $lastOrder = $carts[0]->order;
 
         return $lastOrder + 1;

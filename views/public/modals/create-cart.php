@@ -23,9 +23,9 @@
 <script>
 jQuery(document).ready(function($) {
 
-    var modal               = $('#modal-create-cart'); // Current modal
-    var confirmationModal   = $('#modal-create-cart-confirmation'); // Confirmation modal (called after cart creation)
-    var form                = $("#create-form"); // Current form
+    var currentModal        = $('#modal-create-cart');
+    var confirmationModal   = $('#modal-create-cart-confirmation');
+    var form                = $("#create-form");
 
     // Validate the form and call ajax proces
     form.validate({
@@ -38,22 +38,27 @@ jQuery(document).ready(function($) {
                 dataType: 'json',
                 success: function(response) {
                     if (response.status === "ok" ) {
-                        confirmationModal.find("div.name").html(name); // Put name in confirmation modal
-                        confirmationModal.find('input[name="cart_id"]').val(response.cart_id); // Put cart_id in confirmation modal
-                        confirmationModal.modal('show'); // Show confirmation modal
-                        modal.modal('hide'); // Hide current modal
+                      confirmationModal.find("div.name").html(name); // Put name in confirmation modal
+                      confirmationModal.find('input[name="cart_id"]').val(response.cart_id); // Put cart_id in confirmation modal
+                      confirmationModal.modal('show'); // Show confirmation modal
+                      currentModal.modal('hide'); // Hide current modal
                     } else {
-                        form.find('input[type=submit]').before('<div class="ajax-errors">'+response.error+'</div>'); // Displaying Ajax errors
+                      displayErrorsOnModals(form, response);
                     }
                 },
+                error: function() {
+                  displayErrorsOnModals(form);
+                }
             })
             return false;
         }
     });
 
     // Reset the form when modal is closed
-    modal.on('hidden.bs.modal', function (e) {
-        form.trigger('reset');
+    currentModal.on('hidden.bs.modal', function (e) {
+      jQuery('label.error').remove();
+      jQuery('div.ajax-errors').remove();
+      form.trigger('reset');
     });
 });
 </script>

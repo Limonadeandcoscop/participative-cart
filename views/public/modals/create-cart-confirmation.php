@@ -18,3 +18,27 @@
 </div>
 
 
+
+<script>
+jQuery(document).ready(function($) {
+
+    var currentModal        = $('#modal-create-cart-confirmation');
+    var addToCartModal      = $('#modal-add-to-cart');
+
+    // Populate select of "add to cart" modal before close current modal
+    currentModal.on('hidden.bs.modal', function (e) {
+
+        var cart_id = currentModal.find('input[name="cart_id"]').val();
+        var name    = currentModal.find('div.name').html();
+        var form    = addToCartModal.find('form');
+        var select  = addToCartModal.find('select[name="cart_id"]');
+
+        form.show();
+        addToCartModal.find('.no-cart').hide();
+
+        var url = "<?php echo WEB_DIR ?>" + "/cart/" + cart_id + '/add/' + <?php echo $item_id ?>; // Build ajax uRL
+        select.append('<option selected="selected" url="'+url+'" value="'+cart_id+'">'+name+'</option>');
+    });
+
+});
+</script>

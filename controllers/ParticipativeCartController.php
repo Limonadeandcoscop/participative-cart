@@ -40,14 +40,15 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function indexAction() {
 
-        echo "View call carts page";
+        $this->_helper->viewRenderer->setNoRender(false);
+
     }
 
 
     /**
      * Show a cart
      *
-     * @param Integer $cart-id The ID of the cart
+     * @param Integer (Ajax) $cart-id The ID of the cart
      * @return HTML
      */
     public function viewCartAction() {
@@ -71,14 +72,13 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         if (!($name = $this->getParam('name'))) {
             $json['error'] = "The name is required";
-            echo json_encode($json); // Returns JSON {"error":"The name is required"}
-            return;
+            die(json_encode($json));
         }
 
         $cart = new ParticipativeCart();
 
         $cart->user_id  = $this->_user->id;
-        $cart->order    = $cart::getNextOrder($this->_user);
+        $cart->order    = $cart::getNextOrder();
         $cart->name     = $name;
         $cart->status   = $cart::CART_STATUS_WAITING;
         $cart->save();
@@ -105,13 +105,49 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
     /**
      * Add an item to a cart
      *
-     * @param Integer $cart-id The ID of the cart
-     * @param Integer $item-id The ID of the item
+     * @param Integer (Ajax) $cart-id The ID of the cart
+     * @param Integer (Ajax) $item-id The ID of the item
      * @return JSON
      */
     public function addItemAction() {
 
-        echo "Add item #".$this->getParam('item-id')." to cart #".$this->getParam('cart-id');
+        // if (!$this->_request->isXmlHttpRequest()) return;
+
+        //$this->getResponse()->setHeader('Content-Type', 'application/json');
+
+        $json = array();
+
+        // Check params
+        if (!($item_id = $this->getParam('item-id')) || !($cart_id = $this->getParam('cart-id'))) {
+            $json['error'] = __("Too few parameters to add item ins the cart");
+        }
+
+        // Check item
+        if (!($item = get_record_by_id("Item", $item_id))) {
+            $json['error'] = __("Invalid item ID");
+        }
+
+        // Check cart
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            $json['error'] = __("Invalid cart ID");
+        }
+
+        $participativeCartTable = get_db()->getTable('ParticipativeCart');
+        if ($participativeCartTable->itemIsInCart($item_id, $cart_id)) {
+            $json['error'] = __("The item is already in this cart");
+        }
+
+        if (@$json['error']) {
+            die(json_encode($json));
+        }
+
+        $cartItem = new ParticipativeCartItem();
+        $cartItem->item_id = $item_id;
+        $cartItem->cart_id = $cart_id;
+        $cartItem->save();
+
+        $json['status']  = 'ok';
+        echo json_encode($json); // Returns JSON like {"status":"ok"}
     }
 
 

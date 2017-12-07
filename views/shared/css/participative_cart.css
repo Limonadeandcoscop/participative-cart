@@ -3,6 +3,10 @@
  * Global modals styles (specific styles are in partials)
  */
 
+.modal .modal-body {
+  text-align:center;
+}
+
 .modal .modal-footer {
   display:block;
   margin:0 auto;
@@ -26,4 +30,12 @@
 	margin:0 auto;
 	color:red;
 	border:1px solid red;
+}
+
+.modal .hidden {
+  display: none;
+}
+
+.modal-open {
+   overflow: scroll;
 }

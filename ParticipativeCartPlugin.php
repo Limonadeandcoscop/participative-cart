@@ -134,6 +134,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
       echo get_view()->partial('modals/add-to-cart.php', null, array('carts' => $carts, 'item_id' => $item->id, 'table' => $participativeCartTable));
       echo get_view()->partial('modals/create-cart.php');
       echo get_view()->partial('modals/create-cart-confirmation.php', null, array('item_id' => $item->id));
+      echo get_view()->partial('modals/add-to-cart-confirmation.php');
     }
 
 }

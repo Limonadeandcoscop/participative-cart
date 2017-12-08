@@ -32,9 +32,10 @@
 <script>
 jQuery(document).ready(function($) {
 
-    var modal   = $('#modal-add-to-cart'); // Current modal
-    var form    = $("#add-to-cart"); // Current form
-    var select  = form.find('select[name="cart_id"]');
+    var modal               = $('#modal-add-to-cart');
+    var confirmationModal   = $('#modal-add-to-cart-confirmation');
+    var form                = $("#add-to-cart");
+    var select              = form.find('select[name="cart_id"]');
 
     // Validate the form and call ajax proces
     form.validate({
@@ -48,8 +49,8 @@ jQuery(document).ready(function($) {
                 success: function(response) {
                     if (response.status === "ok" ) {
                         selectedOption.prop('disabled', true); // Disable this option if user reload the modal without reload the page
-                        form.trigger('reset');
                         modal.modal('hide'); // Hide current modal
+                        confirmationModal.modal('show');
                     } else {
                         displayErrorsOnModals(form, response);
                     }
@@ -70,7 +71,7 @@ jQuery(document).ready(function($) {
     // Reset the form when modal is closed
     modal.on('hidden.bs.modal', function (e) {
         removeErrorsOnModals();
-        form.trigger('reset');
+        select.val('');
     });
 });
 </script>

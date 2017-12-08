@@ -33,6 +33,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
                               'public_head',
                               'define_routes',
                               'public_items_show',
+                              'before_delete_item',
     );
 
     /**
@@ -138,6 +139,28 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
       echo get_view()->partial('modals/create-cart.php');
       echo get_view()->partial('modals/create-cart-confirmation.php', null, array('item_id' => $item->id));
       echo get_view()->partial('modals/add-to-cart-confirmation.php');
+    }
+
+
+    /**
+     * Before delete an item, remove it from carts
+     *
+     */
+    public function hookBeforeDeleteItem($args)
+    {
+      $writer = new Zend_Log_Writer_Stream(LOGS_DIR.'/errors.log');
+      $logger = new Zend_Log($writer);
+
+      $item = $args['record'];
+
+      $participativeCartTable = get_db()->getTable('ParticipativeCart');
+      $carts = $participativeCartTable::getCartsOfItem($item->id);
+
+      if (count($carts)) {
+        foreach ($carts as $cart) {
+          $cart->delete();
+        }
+      }
     }
 
 

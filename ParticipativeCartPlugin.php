@@ -39,6 +39,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array Filters for the plugin.
      */
     protected $_filters = array(
+                              'public_navigation_admin_bar',
     );
 
 
@@ -81,7 +82,8 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookUninstall()
     {
         $db = get_db();
-        $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCart` ";
+        $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCart`";
+        $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCartItems`";
         $db->query($sql);
     }
 
@@ -94,6 +96,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
         queue_css_file(array('bootstrap.min', 'participative_cart'));
         queue_js_file(array('participative_cart', 'validate.min', 'tether.min', 'bootstrap.min'));
     }
+
 
     /**
      * Add the routes for accessing cart functionalities
@@ -115,8 +118,8 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
     /**
      * Hook for items/show page
      *
-     * - Displays modal to create a new cart
-     * - Displays modal to add an item in the cart
+     * - Displays modal to create a new cart and the confirmation modal
+     * - Displays modal to add an item in the cart and the confirmation modal
      */
     public function hookPublicItemsShow($args)
     {
@@ -126,7 +129,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
       $carts = $participativeCartTable->getUserCarts();
 
       foreach ($carts as $cart) {
-        if ($participativeCartTable->itemIsInCart($item->id, $cart->id)) {
+        if ($cart->itemIsInCart($item->id)) {
           $cart->contain_item = true;
         }
       }
@@ -137,6 +140,26 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
       echo get_view()->partial('modals/add-to-cart-confirmation.php');
     }
 
+
+    /**
+     * Add the cart link to the admin bar
+     */
+    public function filterPublicNavigationAdminBar($navLinks)
+    {
+        if(!current_user()) {
+            return $navLinks;
+        }
+
+        $navLinks[1] = array(
+            'label'=> __('Your carts'),
+            'class' => 'your-carts-link',
+            'uri' => url("cart")
+        );
+
+        ksort($navLinks);
+
+        return $navLinks;
+    }
 }
 
 

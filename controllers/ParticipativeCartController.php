@@ -18,30 +18,35 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     protected $_user;
 
+    /**
+     * @var User The ParticipativeCart model table
+     */
+    protected $_tableCart;
+
+
     public function init() {
 
         $this->_helper->db->setDefaultModelName('ParticipativeCart');
-
-        // Disable view rendering
-        $this->_helper->viewRenderer->setNoRender(true);
 
         // Redirect to homepage if the user is not logged in
         if(!$this->_user = current_user()) {
             $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
+        // Instanciate tables models
+        $this->_tableCart = $this->_helper->db->getTable('ParticipativeCart');
     }
 
 
     /**
-     * Show all carts
+     * Show all carts of user
      *
      * @return HTML
      */
     public function indexAction() {
 
-        $this->_helper->viewRenderer->setNoRender(false);
-
+        $userCarts = $this->_tableCart->getuserCarts('with_items');
+        $this->view->userCarts = $userCarts;
     }
 
 
@@ -53,7 +58,14 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function viewCartAction() {
 
-        echo "View cart #".$this->getParam('cart-id');
+        if (!($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("The cart ID is required");
+        }
+
+        $cart = get_record_by_id("ParticipativeCart", $cart_id);
+
+        $this->view->cart = $cart;
+        $this->view->items = $cart->getItems();
     }
 
 
@@ -63,6 +75,9 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      * @return JSON
      */
     public function addCartAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
 
         if (!$this->_request->isXmlHttpRequest()) return;
 
@@ -111,9 +126,12 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function addItemAction() {
 
-        // if (!$this->_request->isXmlHttpRequest()) return;
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
 
-        //$this->getResponse()->setHeader('Content-Type', 'application/json');
+        if (!$this->_request->isXmlHttpRequest()) return;
+
+        $this->getResponse()->setHeader('Content-Type', 'application/json');
 
         $json = array();
 
@@ -132,8 +150,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
             $json['error'] = __("Invalid cart ID");
         }
 
-        $participativeCartTable = get_db()->getTable('ParticipativeCart');
-        if ($participativeCartTable->itemIsInCart($item_id, $cart_id)) {
+        if ($cart->itemIsInCart($item_id)) {
             $json['error'] = __("The item is already in this cart");
         }
 

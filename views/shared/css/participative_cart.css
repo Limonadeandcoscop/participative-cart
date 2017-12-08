@@ -39,3 +39,24 @@
 .modal-open {
    overflow: scroll;
 }
+
+/*
+ * View carts page
+ */
+
+ .carts.view .cart {
+  border-bottom: 1px dashed #ddd;
+  padding: 10px;
+  margin: 10px 0;
+ }
+
+
+/*
+ * View a cart page
+ */
+
+ .cart.view .item {
+  border-bottom: 1px dashed red;
+  padding: 10px;
+  margin: 10px 0;
+ }

@@ -44,19 +44,30 @@
  * View carts page
  */
 
- .carts.view .cart {
-  border-bottom: 1px dashed #ddd;
+.carts.view a {
+  display: block;
+  border:none;
+  text-decoration: none;
+}
+
+.carts.view .cart {
   padding: 10px;
   margin: 10px 0;
- }
+}
 
 
 /*
  * View a cart page
  */
 
- .cart.view .item {
-  border-bottom: 1px dashed red;
+.cart.view a {
+  display: block;
+  border:none;
+  text-decoration: none;
+}
+
+.cart.view .item {
   padding: 10px;
   margin: 10px 0;
- }
+}
+

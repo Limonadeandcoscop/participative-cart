@@ -56,11 +56,15 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
     /**
      * Get items in the current cart
      *
-     * @return Item objects
+     * @param $return_items_objects If true return "Item" objects, otherwise return "ParticipativeCartItem" objects
+     * @return Item|ParticipativeCartItem objects
      */
-    public function getItems() {
+    public function getItems($return_items_objects = true) {
 
         $itemsOfCart = get_db()->getTable('ParticipativeCartItem')->findBy(array('cart_id' => $this->id));
+
+        if (!$return_items_objects)
+            return $itemsOfCart;
 
         $items = array();
         foreach($itemsOfCart as $itemOfCart) {
@@ -88,6 +92,17 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
                 return $cart;
         }
         return false;
+    }
+
+    /**
+     * Before delate a cart, delete items in the cart
+     */
+    protected function beforeDelete() {
+
+        $items = $this->getItems(false);
+        foreach ($items as $item) {
+            $item->delete();
+        }
     }
 
 }

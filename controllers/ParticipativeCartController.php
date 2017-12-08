@@ -23,6 +23,10 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     protected $_tableCart;
 
+    /**
+     * @var User The ParticipativeCartItem model table
+     */
+    protected $_tableCartItem;
 
     public function init() {
 
@@ -34,7 +38,8 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         }
 
         // Instanciate tables models
-        $this->_tableCart = $this->_helper->db->getTable('ParticipativeCart');
+        $this->_tableCart       = $this->_helper->db->getTable('ParticipativeCart');
+        $this->_tableCartItem   = $this->_helper->db->getTable('ParticipativeCartItem');
     }
 
 
@@ -64,8 +69,10 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         $cart = get_record_by_id("ParticipativeCart", $cart_id);
 
-        $this->view->cart = $cart;
-        $this->view->items = $cart->getItems();
+        $this->view->cart =  $cart;
+        $this->view->items  = $cart->getItems();
+        $this->view->count  = count($cart->getItems());
+        $this->view->s      = $this->view->count>1 ? 's' : '';
     }
 
 
@@ -113,7 +120,22 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function deleteCartAction() {
 
-        echo "Delete the cart #".$this->getParam('cart-id');
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Check param
+        if (!($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("Invalid cart ID");
+        }
+
+        // Check cart
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart");
+        }
+
+        $cart->delete();
+
+        $this->_helper->redirector->gotoRoute(array(), 'pc_all_carts');
     }
 
 
@@ -177,7 +199,33 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function deleteItemAction() {
 
-        echo "Delete item #".$this->getParam('item-id')." from cart #".$this->getParam('cart-id');
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Check params
+        if (!($item_id = $this->getParam('item-id')) || !($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("Too few parameters to add item ins the cart");
+        }
+
+        // Check item
+        if (!($item = get_record_by_id("Item", $item_id))) {
+            throw new Exception("Invalid item ID");
+        }
+
+        // Check cart
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart ID");
+        }
+
+        // Check that item is in the cart
+        $cartItem = $this->_tableCartItem->findBy(array('cart_id' => $cart_id, 'item_id' => $item_id));
+        if (!$cartItem) {
+            throw new Exception("This item isn't in the cart");
+        }
+
+        $cartItem[0]->delete();
+
+        $this->_helper->redirector->gotoRoute(array('cart-id' => $cart_id), 'pc_view_cart');
     }
 }
 

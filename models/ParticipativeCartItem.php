@@ -20,4 +20,11 @@ class ParticipativeCartItem extends Omeka_Record_AbstractRecord
     public $item_id;
     public $inserted;
 
+    /**
+     * @todo Delete notes and comments
+     */
+	protected function beforeDelete() {
+	}
+
+
 }

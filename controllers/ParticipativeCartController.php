@@ -99,6 +99,11 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         $cart = new ParticipativeCart();
 
+        if ($cart::cartNameExistForUser($name)) {
+            $json['error'] = "The cart name already exists";
+            die(json_encode($json));
+        }
+
         $cart->user_id  = $this->_user->id;
         $cart->order    = $cart::getNextOrder();
         $cart->name     = $name;

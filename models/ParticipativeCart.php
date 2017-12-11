@@ -105,4 +105,21 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         }
     }
 
+
+    /**
+     * Check if a cart name already exists for a user
+     *
+     * @return Boolean
+     */
+    public static function cartNameExistForUser($name) {
+
+        if (!strlen(trim($name))) return false;
+
+        $user = current_user();
+
+        $table = get_db()->getTable('ParticipativeCart');
+        $results = $table->findBy(array('user_id' => $user->id, 'name' => $name));
+
+        if ($results) return true;
+    }
 }

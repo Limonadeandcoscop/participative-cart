@@ -1,5 +1,5 @@
 
-<div class="modal fade" id="modal-create-cart">
+<div class="modal" id="modal-create-cart">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-add-to-cart-confirmation">
+<div class="modal" id="modal-add-to-cart-confirmation">
     <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

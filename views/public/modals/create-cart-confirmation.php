@@ -1,5 +1,5 @@
 
-<div class="modal fade" id="modal-create-cart-confirmation">
+<div class="modal" id="modal-create-cart-confirmation">
     <input type="hidden" name="cart_id" />
     <div class="modal-dialog">
         <div class="modal-content">

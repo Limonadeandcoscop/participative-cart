@@ -6,6 +6,32 @@
   margin-top:40px;
 }
 
+.left.area {
+  width:70%;
+  float:left;
+}
+
+.right.area {
+  float:right;
+  width:30%;
+  background:#eee;
+  padding:0 20px 20px;
+}
+
+.title.area {
+  border-bottom:2px solid #ccc;
+  margin-bottom:20px;
+  position: relative;
+}
+
+.title.area .buttons {
+  position: absolute;
+  right:0;
+  top:0;
+  display: inline;
+}
+
+
 /*
  * Global modals styles (specific styles are in partials)
  */
@@ -65,8 +91,6 @@
 .carts.view a {
   display: block;
   width:max-content;
-  border:none;
-  text-decoration: none;
 }
 
 .carts.view .cart {
@@ -78,12 +102,6 @@
 /*
  * View a cart page
  */
-
-.cart.view a {
-  display: block;
-  border:none;
-  text-decoration: none;
-}
 
 .cart.view .item {
   padding: 10px;

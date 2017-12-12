@@ -80,11 +80,31 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         }
 
         $cart = get_record_by_id("ParticipativeCart", $cart_id);
+        $cart->notes = $cart->getCartNotes();
+        $cart->tags  = $cart->getCartTags();
 
-        $this->view->cart =  $cart;
-        $this->view->items  = $cart->getItems();
-        $this->view->count  = count($cart->getItems());
-        $this->view->s      = $this->view->count>1 ? 's' : '';
+        // Retrieve items in cart and prepare paginatation
+        $this->_helper->db->setDefaultModelName('ParticipativeCartItem');
+        $pluralName = $this->view->pluralize($this->_helper->db->getDefaultModelName());
+        $params['cart_id'] = $cart->id;
+        $recordsPerPage = 2;
+        $currentPage    = $this->getParam('page', 1);
+        $items_in_cart  = $this->_helper->db->findBy($params, $recordsPerPage, $currentPage);
+        $totalRecords   = $this->_helper->db->count($params);
+
+        if ($recordsPerPage) {
+            Zend_Registry::set('pagination', array(
+                'page' => $currentPage,
+                'per_page' => $recordsPerPage,
+                'total_results' => $totalRecords,
+            ));
+        }
+
+        $this->view->items_in_cart  = $items_in_cart;
+        $this->view->total_results  = $totalRecords;
+        $this->view->cart           = $cart;
+        $this->view->count          = count($cart->getItems());
+        $this->view->s              = $this->view->count>1 ? 's' : '';
     }
 
 
@@ -165,7 +185,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
             if ($notes = $this->getParam('note'))
                 $cart->saveCartNotes($notes);
 
-            $this->_helper->redirector->gotoRoute(array(), 'pc_all_carts');
+            $this->_helper->redirector->gotoRoute(array('cart-id' => $cart->id), 'pc_view_cart');
         }
 
         $cart->tags = $cart->getCartTags();

@@ -7,17 +7,17 @@ echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
 
 <form action="#" method="post" id="update-form">
 
-	<div class="name">
+	<div class="group name">
 		<label for="name"><?php echo __('Cart name') ?></label>
 		<input required data-msg="<?php echo __("Name of the cart your required") ?>" name="name" value="<?php echo htmlspecialchars($cart->name, ENT_QUOTES) ?>" />
 	</div>
 
-	<div class="descriptions">
+	<div class="group descriptions">
 		<label for="name"><?php echo __('Description') ?></label>
 		<textarea name="description" cols="80" rows="4"><?php echo $cart->description ?></textarea>
 	</div>
 
-	<div class="notes">
+	<div class="group notes">
 		<label for="name"><?php echo __('Notes') ?></label>
 		<?php if (count($cart->getCartNotes())): ?>
 			<?php foreach($cart->getCartNotes() as $note): ?>
@@ -38,7 +38,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
 
     <script src="https://semantic-ui.com/dist/semantic.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://semantic-ui.com/dist/semantic.min.css">
-	<div class="tags">
+	<div class="group tags">
 		<label for="tags"><?php echo __('Tags') ?></label>
 		<div class="ui fluid search normal selection multiple dropdown">
 	        <input type="hidden" name="tags">
@@ -51,6 +51,13 @@ echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
 	        </div>
 	    </div>
 	</div>
+
+
+	<div class="group status">
+		<label for="status"><?php echo __('Status') ?></label>
+
+	</div>
+
 
 	<div class="buttons">
 		<input type="submit" value="<?php echo __("Save changes") ?>" />

@@ -1,3 +1,10 @@
+/*
+ * Global pages styles
+ */
+
+.group {
+  margin-top:40px;
+}
 
 /*
  * Global modals styles (specific styles are in partials)

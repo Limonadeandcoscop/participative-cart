@@ -120,7 +120,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $cart->order    = $cart::getNextOrder();
         $cart->name     = $name;
         $cart->tags     = $this->getParam('tags');
-        $cart->status   = $cart::CART_STATUS_WAITING;
+        $cart->status   = $cart::CART_STATUS_PRIVATE;
         $cart->save();
 
         $json['status']  = 'ok';

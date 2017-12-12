@@ -58,7 +58,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
           `name` mediumtext NOT NULL,
           `description` text,
           `tags` varchar(255),
-          `status` varchar(20) NOT NULL DEFAULT 'waiting',
+          `status` varchar(20) NOT NULL DEFAULT '".ParticipativeCart::CART_STATUS_PRIVATE."',
           `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
           UNIQUE KEY `id` (`id`)

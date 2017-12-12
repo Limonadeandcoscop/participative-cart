@@ -26,10 +26,8 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
 
 
     // Status constants for a cart
-    const CART_STATUS_WAITING   = 'waiting';
-    const CART_STATUS_PUBLIC    = 'public';
     const CART_STATUS_PRIVATE   = 'private';
-
+    const CART_STATUS_PUBLIC    = 'public';
 
     /**
      * Get the next cart order of current user

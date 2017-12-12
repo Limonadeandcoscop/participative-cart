@@ -31,6 +31,15 @@
   display: inline;
 }
 
+.warning {
+  color:orangered;
+}
+
+.info {
+  font-style:italic;
+  color:#555;
+}
+
 
 /*
  * Global modals styles (specific styles are in partials)

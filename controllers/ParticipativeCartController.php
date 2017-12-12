@@ -192,8 +192,9 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         }
 
         $cart->tags = $cart->getCartTags();
-        $this->view->cart = $cart;
-        $this->view->tags = $this->_tableCartTag->findAll();
+        $this->view->cart       = $cart;
+        $this->view->nb_items   = count($cart->getItems());
+        $this->view->tags       = $this->_tableCartTag->findAll();
 
    }
 
@@ -310,6 +311,12 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         }
 
         $cartItem[0]->delete();
+
+        // Define cart a private if it containes no items
+        if (count($cart->getItems()) == 0) {
+            $cart->status = ParticipativeCart::CART_STATUS_PRIVATE;
+            $cart->save();
+        }
 
         $this->_helper->redirector->gotoRoute(array('cart-id' => $cart_id), 'pc_view_cart');
     }

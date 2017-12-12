@@ -154,9 +154,12 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
                 throw new Exception("The name of the cart is required");
             }
 
+            $status = ($this->getParam('status') == ParticipativeCart::CART_STATUS_PRIVATE) ? ParticipativeCart::CART_STATUS_PRIVATE : ParticipativeCart::CART_STATUS_PUBLIC;
+
             $cart->name         = $name;
             $cart->description  = $this->getParam('description');
             $cart->tags         = $this->getParam('tags'); // Tags handling in ParticipativeCart::beforeSave();
+            $cart->status       = $status;
             $cart->save();
 
             if ($notes = $this->getParam('note'))

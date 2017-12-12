@@ -52,14 +52,13 @@ echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
 	    </div>
 	</div>
 
-
 	<div class="group status">
 		<label for="status"><?php echo __('Status') ?></label>
-
+		<?php echo $cart->status ?>
+		<p><input type="checkbox" name="status" value="private" <?php if ($cart->status == ParticipativeCart::CART_STATUS_PRIVATE) echo 'checked' ?> /><?php echo __('Private') ?> (<?php echo __('private carts are not published to other users') ?>)</p>
 	</div>
 
-
-	<div class="buttons">
+	<div class="group buttons">
 		<input type="submit" value="<?php echo __("Save changes") ?>" />
 		<a class="button" href="<?php echo url('cart') ?>"><?php echo __("Back to your carts") ?></a>
 	</div>

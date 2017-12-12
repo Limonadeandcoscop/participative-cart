@@ -41,6 +41,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
      */
     protected $_filters = array(
                               'public_navigation_admin_bar',
+                              'public_navigation_main',
     );
 
 
@@ -200,17 +201,29 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
         if(!current_user()) {
             return $navLinks;
         }
-
         $navLinks[1] = array(
             'label'=> __('Your carts'),
             'class' => 'your-carts-link',
             'uri' => url("cart")
         );
-
         ksort($navLinks);
-
         return $navLinks;
     }
+
+
+    /**
+     * Add the workspace link to main menu
+     */
+    public function filterPublicNavigationMain($navLinks)
+    {
+        $navLinks[] = array(
+            'label'=> __('Workspace'),
+            'class' => 'workspace-link',
+            'uri' => url("workspace")
+        );
+        return $navLinks;
+    }
+
 }
 
 

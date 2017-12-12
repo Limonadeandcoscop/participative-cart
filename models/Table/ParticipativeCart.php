@@ -20,12 +20,19 @@ class Table_ParticipativeCart extends Omeka_Db_Table
      * Get the cart of current user
      *
      * @param Boolean $with_items whether or not retrieve items of the cart
+     * @param Boolean $status Returns only cart with a given status
      * @return Array of ParticipativeCart objects
      */
-    public static function getUserCarts($with_items = false) {
+    public static function getUserCarts($with_items = false, $status = false) {
 
         $user = current_user();
-        $carts = get_db()->getTable('ParticipativeCart')->findBy(array('user_id' => $user->id));
+
+        $params['user_id'] = $user->id;
+
+        if ($status)
+            $params['status'] = $status;
+
+        $carts = get_db()->getTable('ParticipativeCart')->findBy($params);
 
         if (!$with_items)
             return $carts;

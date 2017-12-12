@@ -18,9 +18,18 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 	<?php echo __('There are no items in this cart'); ?>
 <?php endif; ?>
 
-<?php echo pagination_links(); ?>
+<?php if ($description = $cart->description): ?>
+	<div class="group description">
+		<?php echo $description ?>
+	</div>
+<?php endif; ?>
 
 <div class="left area">
+
+	<div class="pagination-links">
+		<?php echo pagination_links(); ?>
+	</div>
+
 	<?php foreach ($items_in_cart as $item_in_cart): ?>
 		<?php $item = get_record_by_id('Item', $item_in_cart->item_id) ?>
 		<div class="item">
@@ -35,12 +44,6 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 	<div class="group status">
 		<strong><?php echo __('Status') ?></strong><p><?php echo $cart->status; ?></p>
 	</div>
-
-	<?php if($description = $cart->description): ?>
-	<div class="group description">
-		<strong><?php echo __('Description') ?></strong><p><?php echo $description; ?></p>
-	</div>
-	<?php endif; ?>
 
 	<?php if(count($cart->notes)): ?>
 	<div class="group notes">

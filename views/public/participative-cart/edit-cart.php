@@ -3,7 +3,14 @@ $title = __('Edit cart ') . $cart->quote('name');
 echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
 ?>
 
-<h1><?php echo $title ?></h1>
+<div class="title area">
+	<h1><?php echo $title ?></h1>
+	<div class="buttons">
+		<a class="back button" href="<?php echo url(array('cart-id' => $cart->id), 'pc_view_cart'); ?>"><?php echo __('Back to the cart') ?></a>
+		<a class="delete button" data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('cart-id' => $cart->id), 'pc_delete_cart'); ?>"><?php echo __('Delete cart') ?></a>
+	</div>
+</div>
+
 
 <form action="#" method="post" id="update-form">
 
@@ -60,7 +67,6 @@ echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
 
 	<div class="group buttons">
 		<input type="submit" value="<?php echo __("Save changes") ?>" />
-		<a class="button" href="<?php echo url('cart') ?>"><?php echo __("Back to your carts") ?></a>
 	</div>
 
 </form>
@@ -100,8 +106,7 @@ jQuery(document).ready(function($) {
 });
 </script>
 
-
-
-
-
-
+<?php
+	// Call confirmation modal
+	echo $this->partial('modals/confirmation.php', array('message' => ''));
+?>

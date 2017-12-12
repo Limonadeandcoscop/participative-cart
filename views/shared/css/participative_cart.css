@@ -108,15 +108,33 @@
   margin: 10px 0;
 }
 
+.cart.view .description {
+  clear:both;
+  background:#eee;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.cart.view .pagination-links {
+  float:left;
+  width:100%;
+}
+
+.cart.view .item {
+  padding:0;
+  margin:20px 0;
+}
+
+.cart.view .remove {
+  display:block;
+  width:max-content;
+  color:black;
+}
 
 
 /*
  * Edit cart page
  */
-
-.cart.edit .buttons {
-  margin-top:30px;
-}
 
 .cart.edit a.remove-note {
     float:right;

@@ -56,14 +56,17 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function indexAction() {
 
-        $userCarts = $this->_tableCart->getuserCarts('with_items');
+        $userCartsPrivate   = $this->_tableCart->getuserCarts('with_items', ParticipativeCart::CART_STATUS_PRIVATE);
+        $userCartsPublic    = $this->_tableCart->getuserCarts('with_items', ParticipativeCart::CART_STATUS_PUBLIC);
 
         // Retrieve all tags (for 'create cart' modal)
         $participativeCartTagTable = get_db()->getTable('ParticipativeCartTag');
         $tags = $participativeCartTagTable->findAll();
         if (!$tags) $tags = array();
         $this->view->tags = $tags;
-        $this->view->userCarts = $userCarts;
+
+        $this->view->userCartsPrivate   = $userCartsPrivate;
+        $this->view->userCartsPublic    = $userCartsPublic;
     }
 
 

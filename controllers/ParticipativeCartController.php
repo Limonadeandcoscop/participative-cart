@@ -28,6 +28,11 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     protected $_tableCartItem;
 
+    /**
+     * @var User The ParticipativeCartTag model table
+     */
+    protected $_tableCartTag;
+
     public function init() {
 
         $this->_helper->db->setDefaultModelName('ParticipativeCart');
@@ -40,6 +45,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         // Instanciate tables models
         $this->_tableCart       = $this->_helper->db->getTable('ParticipativeCart');
         $this->_tableCartItem   = $this->_helper->db->getTable('ParticipativeCartItem');
+        $this->_tableCartTag    = $this->_helper->db->getTable('ParticipativeCartTag');
     }
 
 
@@ -51,6 +57,12 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
     public function indexAction() {
 
         $userCarts = $this->_tableCart->getuserCarts('with_items');
+
+        // Retrieve all tags (for 'create cart' modal)
+        $participativeCartTagTable = get_db()->getTable('ParticipativeCartTag');
+        $tags = $participativeCartTagTable->findAll();
+        if (!$tags) $tags = array();
+        $this->view->tags = $tags;
         $this->view->userCarts = $userCarts;
     }
 
@@ -107,6 +119,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $cart->user_id  = $this->_user->id;
         $cart->order    = $cart::getNextOrder();
         $cart->name     = $name;
+        $cart->tags     = $this->getParam('tags');
         $cart->status   = $cart::CART_STATUS_WAITING;
         $cart->save();
 
@@ -115,6 +128,48 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         echo json_encode($json); // Returns JSON like {"status":"ok","cart_id":"15"}
     }
+
+
+    /**
+     * Edit a cart
+     *
+     * @param Integer $cart-id The ID of the cart
+     * @return void
+     */
+    public function editCartAction() {
+
+        // Check param
+        if (!($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("Invalid cart ID");
+        }
+
+        // Check cart
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart");
+        }
+
+        if ($this->getRequest()->isPost()) {
+
+            if (!($name = $this->getParam('name'))) {
+                throw new Exception("The name of the cart is required");
+            }
+
+            $cart->name         = $name;
+            $cart->description  = $this->getParam('description');
+            $cart->tags         = $this->getParam('tags'); // Tags handling in ParticipativeCart::beforeSave();
+            $cart->save();
+
+            if ($notes = $this->getParam('note'))
+                $cart->saveCartNotes($notes);
+
+            $this->_helper->redirector->gotoRoute(array(), 'pc_all_carts');
+        }
+
+        $cart->tags = $cart->getCartTags();
+        $this->view->cart = $cart;
+        $this->view->tags = $this->_tableCartTag->findAll();
+
+   }
 
 
     /**

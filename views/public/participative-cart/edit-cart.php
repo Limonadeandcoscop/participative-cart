@@ -1,0 +1,101 @@
+<?php
+$title = __('Edit cart ') . $cart->quote('name');
+echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
+?>
+
+<h1><?php echo $title ?></h1>
+
+<form action="#" method="post" id="update-form">
+
+	<div class="name">
+		<label for="name"><?php echo __('Cart name') ?></label>
+		<input required data-msg="<?php echo __("Name of the cart your required") ?>" name="name" value="<?php echo htmlspecialchars($cart->name, ENT_QUOTES) ?>" />
+	</div>
+
+	<div class="descriptions">
+		<label for="name"><?php echo __('Description') ?></label>
+		<textarea name="description" cols="80" rows="4"><?php echo $cart->description ?></textarea>
+	</div>
+
+	<div class="notes">
+		<label for="name"><?php echo __('Notes') ?></label>
+		<?php if (count($cart->getCartNotes())): ?>
+			<?php foreach($cart->getCartNotes() as $note): ?>
+				<div class="note">
+					<textarea name="note[]" cols="80" rows="4"><?php echo $note->note; ?></textarea>
+					<a href="#" class="remove-note"><?php echo __('Remove note') ?></a>
+				</div>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<div class="note">
+				<label for="name"><?php echo __('Note') ?></label>
+				<textarea name="note[]" cols="80" rows="4"></textarea>
+				<a href="#" class="remove-note"><?php echo __('Remove note') ?></a>
+			</div>
+		<?php endif; ?>
+		<a id="add-cart" href="#"><?php echo __('Add note') ?></a>
+	</div>
+
+    <script src="https://semantic-ui.com/dist/semantic.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://semantic-ui.com/dist/semantic.min.css">
+	<div class="tags">
+		<label for="tags"><?php echo __('Tags') ?></label>
+		<div class="ui fluid search normal selection multiple dropdown">
+	        <input type="hidden" name="tags">
+	        <i class="dropdown icon"></i>
+	        <div class="default text"><?php echo __('Search or add tags') ?></div>
+	        <div class="menu">
+	        <?php foreach($this->tags as $tag): ?>
+	            <div class="item" data-value="<?php echo $tag->id; ?>"><?php echo $tag->name ?></div>
+	        <?php endforeach; ?>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="buttons">
+		<input type="submit" value="<?php echo __("Save changes") ?>" />
+		<a class="button" href="<?php echo url('cart') ?>"><?php echo __("Back to your carts") ?></a>
+	</div>
+
+</form>
+
+<?php echo foot(); ?>
+
+
+<script>
+jQuery(document).ready(function($) {
+
+
+	var form = $("#update-form");
+
+    // Validate the form and call ajax proces
+    form.validate();
+
+	// Create a new 'note' area
+    $('#add-cart').click(function() {
+    	var lastNote	= $('.notes > .note').last();
+    	var cloneNote 	= lastNote.clone();
+    	cloneNote.find('textarea').val('');
+    	lastNote.after(cloneNote);
+    	return false;
+    });
+
+	// Delete a 'note' area
+	$(document).on("click", "a.remove-note", function(){
+    	var currentNote	= $(this).parent('.note');
+    	currentNote.remove();
+    	return false;
+    });
+
+	// Enable search dropdown
+	<?php foreach($cart->tags as $tag) @$selectedTags .= "'".$tag->id."',"; ?>
+	$('.ui.dropdown').dropdown('set selected', [<?php echo @$selectedTags ?>]).dropdown({'allowAdditions': true, 'keys': {delimiter: 13}});
+
+});
+</script>
+
+
+
+
+
+

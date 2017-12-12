@@ -1,5 +1,5 @@
 <?php
-$title = __("Cart &quot;{$cart->name}&quot;");
+$title = __("Cart ") . $cart->quote('name');
 echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 ?>
 

@@ -56,6 +56,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
           `order` int(3) unsigned NOT NULL,
           `name` mediumtext NOT NULL,
           `description` text,
+          `tags` varchar(255),
           `status` varchar(20) NOT NULL DEFAULT 'waiting',
           `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
@@ -74,6 +75,24 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $this->_db->query($sql);
 
+        $sql  = "
+        CREATE TABLE IF NOT EXISTS `{$this->_db->ParticipativeCartTags}` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `name` varchar(50) UNIQUE NOT NULL,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `id` (`id`)
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $this->_db->query($sql);
+
+        $sql  = "
+        CREATE TABLE IF NOT EXISTS `{$this->_db->ParticipativeCartNotes}` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `cart_id` int(10) unsigned NOT NULL,
+          `note` mediumtext NOT NULL,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `id` (`id`)
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $this->_db->query($sql);
     }
 
 
@@ -84,7 +103,12 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
     {
         $db = get_db();
         $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCart`";
+        $db->query($sql);
         $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCartItems`";
+        $db->query($sql);
+        $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCartTags`";
+        $db->query($sql);
+        $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCartNotes`";
         $db->query($sql);
     }
 
@@ -95,7 +119,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookPublicHead($args) {
 
         queue_css_file(array('bootstrap.min', 'participative_cart'));
-        queue_js_file(array('participative_cart', 'validate.min', 'tether.min', 'bootstrap.min'));
+        queue_js_file(array('participative_cart', 'validate.min', 'tether.min', 'transition.min', 'bootstrap.min', 'dropdown.min'));
     }
 
 
@@ -135,8 +159,12 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
         }
       }
 
+      // Retrieve all tags
+      $participativeCartTagTable = get_db()->getTable('ParticipativeCartTag');
+      $tags = $participativeCartTagTable->findAll();
+
       echo get_view()->partial('modals/add-to-cart.php', null, array('carts' => $carts, 'item_id' => $item->id, 'table' => $participativeCartTable));
-      echo get_view()->partial('modals/create-cart.php');
+      echo get_view()->partial('modals/create-cart.php', null, array('redirect_text' => __('Back to cart selection')));
       echo get_view()->partial('modals/create-cart-confirmation.php', null, array('item_id' => $item->id));
       echo get_view()->partial('modals/add-to-cart-confirmation.php');
     }

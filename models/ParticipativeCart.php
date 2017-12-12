@@ -20,6 +20,7 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
     public $order;
     public $name;
     public $description;
+    public $tags;
     public $status;
     public $inserted;
 
@@ -95,7 +96,7 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
     }
 
     /**
-     * Before delate a cart, delete items in the cart
+     * Before delete a cart, delete items in the cart
      */
     protected function beforeDelete() {
 
@@ -122,4 +123,103 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
 
         if ($results) return true;
     }
+
+    /**
+     * Quote a cart value, for example returns '&quot;My Cart&quot;' for 'My Cart'
+     *
+     * @return String
+     */
+    public function quote($value) {
+
+        if (!isset($this->$value))
+            throw new Exception("Invalid value to quote");
+
+        return '&quot;'.$this->$value.'&quot;';
+    }
+
+
+    /**
+     * Before save the cart, insert new tags (added from the combobox)
+     * and replace the results of the combo by tags IDs
+     *
+     * @return Array $args
+     */
+    protected function beforeSave($args) {
+
+        $tagsArray  = array_unique(explode(',', $this->tags));
+
+        $tagsIds = '';
+
+        foreach($tagsArray as $tag) {
+            if (strlen(trim($tag)) && !is_numeric($tag)) {
+                $tagObject = new ParticipativeCartTag;
+                $tagObject->name = $tag;
+                $tagObject->save();
+                $tag = $tagObject->id;
+            }
+            $tagsIds .= $tag . ',';
+        }
+        $this->tags = $tagsIds;
+    }
+
+
+    /**
+     * Get tags for current cart
+     *
+     * @return Array of ParticipativeCartTag objects
+     */
+    public function getCartTags() {
+
+        if (!strlen(trim($this->tags))) return;
+
+        $tagsArray  = explode(',', $this->tags);
+        $table      = get_db()->getTable('ParticipativeCartTag');
+        $results    = $table->findBy(array('id' => $tagsArray));
+        return $results;
+    }
+
+
+    /**
+     * Save the notes of a cart
+     *
+     * @param Array $notes array of notes (strings)
+     */
+    public function saveCartNotes($notes) {
+
+        if (!is_array($notes))
+            throw new Exception("Invalid notes array");
+
+        $table      = get_db()->getTable('ParticipativeCartNote');
+        $results    = $table->findBy(array('cart_id' => $this->id));
+
+        // Deleting old notes
+        foreach($results as $result) {
+            $result->delete();
+        }
+
+        // Adding notes
+        foreach($notes as $note) {
+            if (strlen(trim($note))) {
+                $noteObject = new ParticipativeCartNote;
+                $noteObject->cart_id = $this->id;
+                $noteObject->note    = $note;
+                $noteObject->save();
+            }
+        }
+    }
+
+
+    /**
+     * Get notes for current cart
+     *
+     * @return Array of ParticipativeCartNote objects
+     */
+    public function getCartNotes() {
+
+        $table      = get_db()->getTable('ParticipativeCartNote');
+        $results    = $table->findBy(array('cart_id' => $this->id));
+        return $results;
+    }
+
+
 }

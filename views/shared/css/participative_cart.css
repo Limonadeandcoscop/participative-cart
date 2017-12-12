@@ -40,12 +40,24 @@
    overflow: scroll;
 }
 
+
+/*
+ * Global form styles
+ */
+
+ form label.error {
+    color:red;
+    display: block;
+ }
+
+
 /*
  * View carts page
  */
 
 .carts.view a {
   display: block;
+  width:max-content;
   border:none;
   text-decoration: none;
 }
@@ -71,3 +83,28 @@
   margin: 10px 0;
 }
 
+
+
+/*
+ * Edit cart page
+ */
+
+.cart.edit .buttons {
+  margin-top:30px;
+}
+
+.cart.edit a.remove-note {
+    float:right;
+}
+
+.cart.edit a.remove-note {
+  color:orangered;
+}
+
+.cart.edit .notes .note:first-of-type a.remove-note {
+  visibility: hidden;
+}
+
+.cart.edit .tags {
+  margin-top:30px;
+}

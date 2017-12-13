@@ -47,7 +47,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 		<?php $item = get_record_by_id('Item', $item_in_cart->item_id) ?>
 		<div class="item">
 			<div class="title"><?php echo $item->getDisplayTitle(); ?></div>
-			<div class="identifier"><strong><?php echo __('Identifier') ?> : <?php echo metadata($item, array('Dublin Core', 'Identifier')) ?></div>
+			<div class="identifier"><strong><?php echo __('Identifier') ?></strong> : <?php echo metadata($item, array('Dublin Core', 'Identifier')) ?></div>
 			<a class="remove" data-toggle="modal" data-target="#modal-confirmation" data-message="<?php echo __('Are you sure you want to remove this item from the cart and delete all its comments and notes ?') ?>" href="<?php echo url(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_delete_item_from_cart'); ?>"><?php echo __('Remove from cart') ?></a>
 			&nbsp;|&nbsp;
 			<a class="print" href="<?php echo url(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_print_item_from_cart'); ?>"><?php echo __('Print item') ?></a>

@@ -6,6 +6,18 @@
   margin-top:40px;
 }
 
+.title.area {
+  border-bottom:2px solid #ccc;
+  margin-bottom:20px;
+  position: relative;
+}
+
+.top.area {
+  float:left;
+  width: 100%;
+  margin-bottom:20px;
+}
+
 .left.area {
   width:70%;
   float:left;
@@ -16,12 +28,6 @@
   width:30%;
   background:#eee;
   padding:0 20px 20px;
-}
-
-.title.area {
-  border-bottom:2px solid #ccc;
-  margin-bottom:20px;
-  position: relative;
 }
 
 .title.area .buttons {
@@ -40,6 +46,10 @@
   color:#555;
 }
 
+.button.disable {
+  background:#888;
+  cursor:no-drop;
+}
 
 /*
  * Global modals styles (specific styles are in partials)
@@ -103,8 +113,8 @@
 }
 
 .carts.view .cart {
-  padding: 10px;
-  margin: 10px 0;
+  padding:0;
+  margin:10px 0;
 }
 
 
@@ -140,6 +150,9 @@
   color:black;
 }
 
+.cart.view .search {
+  float:right;
+}
 
 /*
  * Edit cart page

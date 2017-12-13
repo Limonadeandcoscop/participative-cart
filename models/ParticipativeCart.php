@@ -93,6 +93,15 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         return false;
     }
 
+
+    /**
+     * Before delete a cart, delete items in the cart
+     */
+    public function empty() {
+        $this->beforeDelete();
+    }
+
+
     /**
      * Before delete a cart, delete items in the cart
      */

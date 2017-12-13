@@ -200,6 +200,31 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
 
     /**
+     * Empty a cart
+     *
+     * @param Integer $cart-id The ID of the cart
+     */
+    public function emptyCartAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Check param
+        if (!($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("Invalid cart ID");
+        }
+
+        // Check cart
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart");
+        }
+
+        $cart->empty();
+
+        $this->_helper->redirector->gotoRoute(array('cart-id' => $cart->id), 'pc_view_cart');
+    }
+
+    /**
      * Delete a cart
      *
      * @param Integer $cart-id The ID of the cart

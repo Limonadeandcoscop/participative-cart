@@ -20,7 +20,12 @@
 <script>
 jQuery(document).ready(function($) {
   $('#modal-confirmation').on('show.bs.modal', function(e) {
-     $(this).find('.btn-ok').attr('href', $(e.relatedTarget).attr('href'));
+
+    // Get message from html link
+    var message = $(e.relatedTarget).data('message');
+    $('p.message').html(message);
+
+    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).attr('href'));
   });
 });
 </script>

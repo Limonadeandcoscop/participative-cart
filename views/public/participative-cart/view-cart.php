@@ -80,7 +80,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 
 <?php
 	// Call confirmation modal
-	echo $this->partial('modals/confirmation.php', array('message' => ''));
+	echo $this->partial('participative-cart/modal-confirmation.php', array('message' => ''));
 ?>
 
 

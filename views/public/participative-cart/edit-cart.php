@@ -112,5 +112,5 @@ jQuery(document).ready(function($) {
 
 <?php
 	// Call confirmation modal
-	echo $this->partial('modals/confirmation.php', array('message' => ''));
+	echo $this->partial('participative-cart/modal-confirmation.php', array('message' => ''));
 ?>

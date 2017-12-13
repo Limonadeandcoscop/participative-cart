@@ -37,14 +37,14 @@ echo head(array('title' => $title, 'bodyclass' => 'carts view'));
 	<p><?php echo __("You don't have a cart yet") ?></p>
 <?php endif; ?>
 
-<?php echo $this->partial('modals/create-cart.php', array('tags' => $tags)); ?>
-<?php echo $this->partial('modals/create-cart-confirmation.php', array('redirect' => url("cart"), 'redirect_text' => __('Close'))); ?>
+<?php echo $this->partial('participative-cart/modal-create-cart.php', array('tags' => $tags)); ?>
+<?php echo $this->partial('participative-cart/modal-create-cart-confirmation.php', array('redirect' => url("cart"), 'redirect_text' => __('Close'))); ?>
 
 <?php echo foot(); ?>
 
 <?php
 	// Call confirmation modal
 	$message = _('Are you sure you want to delete the cart and all its items ?');
-	echo $this->partial('modals/confirmation.php', array('message' => $message));
+	echo $this->partial('participative-cart/modal-confirmation.php', array('message' => $message));
 ?>
 

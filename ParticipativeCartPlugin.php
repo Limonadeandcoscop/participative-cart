@@ -164,10 +164,10 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
       $participativeCartTagTable = get_db()->getTable('ParticipativeCartTag');
       $tags = $participativeCartTagTable->findAll();
 
-      echo get_view()->partial('modals/add-to-cart.php', null, array('carts' => $carts, 'item_id' => $item->id, 'table' => $participativeCartTable));
-      echo get_view()->partial('modals/create-cart.php');
-      echo get_view()->partial('modals/create-cart-confirmation.php', null, array('item_id' => $item->id, 'redirect_text' => __('Back to cart selection')));
-      echo get_view()->partial('modals/add-to-cart-confirmation.php');
+      echo get_view()->partial('participative-cart/modal-add-to-cart.php', null, array('carts' => $carts, 'item_id' => $item->id, 'table' => $participativeCartTable));
+      echo get_view()->partial('participative-cart/modal-create-cart.php');
+      echo get_view()->partial('participative-cart/modal-create-cart-confirmation.php', null, array('item_id' => $item->id, 'redirect_text' => __('Back to cart selection')));
+      echo get_view()->partial('participative-cart/modal-add-to-cart-confirmation.php');
     }
 
 

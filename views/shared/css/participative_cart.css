@@ -141,12 +141,21 @@
 
 .cart.view .item {
   padding:0;
-  margin:20px 0;
+  margin:30px 0;
 }
 
-.cart.view .remove {
-  display:block;
-  width:max-content;
+.cart.view .item .title {
+  font-size:18px;
+  font-weight: bold;
+  line-height:22px;
+}
+
+.cart.view .item .identifier {
+  font-size:12px;
+  margin:5px 0;
+}
+
+.cart.view a {
   color:black;
 }
 

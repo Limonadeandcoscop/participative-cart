@@ -303,6 +303,23 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
 
     /**
+     * Print an item of cart
+     *
+     * @param Integer $cart-id The ID of the cart
+     * @param Integer $item-id The ID of the item
+     * @return JSON
+     */
+    public function printItemAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        echo "Comming soon";
+        echo '<br /><br><a href="javascript:history.back();">Back</a>';
+    }
+
+
+    /**
      * Delete an item from a cart
      *
      * @param Integer $cart-id The ID of the cart

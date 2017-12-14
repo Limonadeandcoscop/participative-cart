@@ -65,4 +65,56 @@ class Table_ParticipativeCart extends Omeka_Db_Table
         return $keys;
     }
 
+
+    /**
+     * Get carts viewable for current user
+     *
+     * @param Array $params Search (and pagination) params retrieve from the controller
+     * @param Boolean $total Returns total results (ignore the pagination params)
+     * @return Array of ParticipativeCart objects
+     */
+    public static function getViewableCartOfUser($params, $total = false) {
+
+        $recordsPerPage = ParticipativeCartPlugin::NB_CARTS_ON_LISTS;
+        $currentPage    = @$params['page'];
+        $sort_field     = @$params['sort_field'];
+        $sort_dir       = @$params['sort_dir'];
+
+        $table = get_db()->getTable('ParticipativeCart');
+
+        $select = $table->getSelectForFindBy($params, $recordsPerPage, $currentPage);
+
+        // Add specific sorting
+        $select->join(array('users' => get_db()->Users), 'participative_carts.user_id = users.id', array());
+        if (isset($sort_field) && strpos($sort_field, '.')) {
+            $dir = 'ASC';
+            if ($sort_dir == 'd')
+                $dir = 'DESC';
+            $select->order($sort_field.' '.$dir);
+        }
+
+        if ($total)
+        return $table->fetchObjects($select);
+
+        // Apply pagination params
+        $select = $table->applyPagination($select, $recordsPerPage, $currentPage);
+
+        $carts = $table->fetchObjects($select);
+
+        return $carts;
+    }
+
+
+    /**
+     * Get total number of cart viewable for current user
+     *
+     * @param Array $params Search (and pagination) params retrieve from the controller
+     * @return Integer The total number of carts
+     */
+    public static function getTotalCountViewableCartOfUser($params) {
+
+        $totalCarts = self::getViewableCartOfUser($params, true);
+        return count($totalCarts);
+    }
+
 }

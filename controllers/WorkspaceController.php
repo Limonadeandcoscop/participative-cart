@@ -24,6 +24,20 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
      */
     public function indexAction() {
 
+        $params = $this->getAllParams();
+        $table 	= $this->_helper->db->getTable('ParticipativeCart');
+        $carts = $table::getViewableCartOfUser($params);
+
+		$totalRecords = $table::getTotalCountViewableCartOfUser($params);
+
+        Zend_Registry::set('pagination', array(
+            'page' => $this->getParam('page', 1),
+            'per_page' => ParticipativeCartPlugin::NB_CARTS_ON_LISTS,
+            'total_results' => $totalRecords,
+        ));
+
+        $this->view->carts  = $carts;
+        $this->view->total_results  = $totalRecords;
     }
 
 }

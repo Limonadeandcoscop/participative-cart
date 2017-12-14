@@ -42,7 +42,7 @@ echo head(array('title' => $title, 'bodyclass' => 'carts view'));
 
 <div class="right area">
 	<input style="margin-top:20px;float:left; width:180px;" type="text" value="" name="search" placeholder="<?php echo __('Search in all database') ?>" />
-	<input style="margin-top:20px;float:left;" type="submit" value="<?php echo __('Search') ?>" />
+	<input class="button disable" style="margin-top:20px;float:left;" type="submit" value="<?php echo __('Search') ?>" />
 </div>
 
 

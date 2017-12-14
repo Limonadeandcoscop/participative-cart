@@ -31,7 +31,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 	<?php endif; ?>
 	<div class="search">
 		<input type="text" value="" name="search" placeholder="<?php echo __('Search in all database') ?>" />
-		<input type="submit" value="<?php echo __('Search') ?>" />
+		<input class="button disable" type="submit" value="<?php echo __('Search') ?>" />
 	</div>
 </div><!--/top-area-->
 

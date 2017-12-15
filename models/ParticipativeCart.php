@@ -53,6 +53,20 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
 
 
     /**
+     * Returns the "User" object for this cart
+     *
+     * @return User object
+     */
+    public function getUser() {
+
+        $user = get_record_by_id('User', $this->user_id);
+        if (get_class($user) != 'User')
+            throw new Exception("Invalid user ID");
+        return $user;
+    }
+
+
+    /**
      * Get items in the current cart
      *
      * @param $return_items_objects If true return "Item" objects, otherwise return "ParticipativeCartItem" objects
@@ -183,6 +197,54 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         $table      = get_db()->getTable('ParticipativeCartTag');
         $results    = $table->findBy(array('id' => $tagsArray));
         return $results;
+    }
+
+
+    /**
+     * Check if a cart has a given tag
+     * If an array is given, returns TRUE if the cart contains at least one value of $tags_id
+     *
+     * @param Integer|Array $tags_id The tag ID or an array of tags IDs
+     * @return Boolean
+     */
+    public function hasTag($tags_id) {
+
+        if (!($cartTags = $this->getCartTags())) return false;
+
+        $ids = array_map(function($r) {
+            return $r['id'];
+        }, $cartTags);
+
+
+        if (!is_array($tags_id))
+            return in_array($tags_id, $ids);
+
+        $intersect = array_intersect($ids, $tags_id);
+
+        //if (count($intersect) == count($tags_id))
+        if (count($intersect)>0)
+            return true;
+
+        return false;
+    }
+
+
+    /**
+     * Display tags in HTML
+     *
+     * @param String $html_tag The tag for surround tag values
+     * @param String $class The class for each tag value
+     * @return HTML
+     */
+    public function displayTags($html_tag = 'span', $class = 'tag') {
+
+        if (!($tags = $this->getCartTags())) return;
+
+        $html = '';
+        foreach ($tags as $tag) {
+            $html .= '<'.$html_tag.' class="'.$class.'">' . $tag->name . '</'.$html_tag.'>';
+        }
+        return $html;
     }
 
 

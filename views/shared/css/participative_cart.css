@@ -182,3 +182,40 @@
 .cart.edit .tags {
   margin-top:30px;
 }
+
+
+/*
+ * Workspace page
+ */
+
+.workspace .facet li {
+  list-style:none;
+  display: block;
+}
+
+.workspace #total-results {
+  float:left;
+}
+
+.workspace .item {
+  margin-bottom:20px;
+  padding-bottom:40px;
+  border-bottom: 3px solid #ccc;
+  position: relative;
+}
+
+.workspace .item > div {
+  margin:5px;
+}
+
+.workspace .tag {
+  padding:3px 6px;
+  background:#ccc;
+  margin:10px 2px;
+}
+
+.workspace .item .button {
+  position: absolute;
+  bottom:20px;
+  right: 0
+}

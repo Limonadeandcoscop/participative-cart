@@ -58,15 +58,6 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 		</div>
 	<?php endforeach; ?>
 
-</div><!--/left-area-->
-
-
-<div class="right area">
-
-	<div class="group status">
-		<strong><?php echo __('Status') ?></strong><p><?php echo $cart->status; ?></p>
-	</div>
-
 	<?php if(count($cart->notes)): ?>
 	<div class="group notes">
 		<strong><?php echo __('Notes') ?></strong>
@@ -77,6 +68,15 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 		</p>
 	</div>
 	<?php endif; ?>
+
+</div><!--/left-area-->
+
+
+<div class="right area">
+
+	<div class="group status">
+		<strong><?php echo __('Status') ?></strong><p><?php echo $cart->status; ?></p>
+	</div>
 
 	<?php if(count($cart->tags)): ?>
 	<div class="group tags">

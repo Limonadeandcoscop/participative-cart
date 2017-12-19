@@ -93,7 +93,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         $this->view->carts          = $pageCarts;
         $this->view->total_results  = count($carts);
         $this->view->refine         = $this->getParam('users') || $this->getParam('tags') ? $this->getParam('refine') : false;
-        $this->view->refinements    = $refinements;
+        $this->view->refinements    = @$refinements;
         $this->view->params         = $this->getAllParams();
         $this->view->original_uri   = $_SESSION['orginal_uri'];
     }

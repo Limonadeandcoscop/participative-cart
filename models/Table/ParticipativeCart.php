@@ -81,7 +81,13 @@ class Table_ParticipativeCart extends Omeka_Db_Table
 
         $table = get_db()->getTable('ParticipativeCart');
 
+        // Get only public carts
+        $params['status'] = ParticipativeCart::CART_STATUS_PUBLIC;
+
         $select = $table->getSelectForFindBy($params, $recordsPerPage, $currentPage);
+
+        $user = current_user();
+        $select->where('user_id <>'.$user->id);
 
         // Add specific sorting
         $select->join(array('users' => get_db()->Users), 'participative_carts.user_id = users.id', array());

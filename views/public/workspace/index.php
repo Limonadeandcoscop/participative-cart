@@ -5,7 +5,7 @@ echo head(array('title' => $title, 'bodyclass' => 'workspace'));
 
 <h1><?php echo $title ?></h1>
 
-
+<?php if (count($carts)): ?>
 <div class="left area" id="refinements" style="width:30%; background:#eee;padding:10px;">
 	<h2><?php echo __("Filter by") ?></h2>
 
@@ -42,9 +42,7 @@ echo head(array('title' => $title, 'bodyclass' => 'workspace'));
             </ul>
         </div>
     <?php endif; ?>
-
 </div>
-
 
 <div class="left area" style="float:left">
 
@@ -70,7 +68,9 @@ echo head(array('title' => $title, 'bodyclass' => 'workspace'));
 		</div>
 	<?php endforeach; ?>
 </div>
-
+<?php else: ?>
+    <p class="no-carts"><?php echo __("You don't have any cart in your workspace"); ?></p>
+<?php endif; ?>
 
 <?php echo pagination_links(); ?>
 

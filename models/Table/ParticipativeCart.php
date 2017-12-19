@@ -86,9 +86,6 @@ class Table_ParticipativeCart extends Omeka_Db_Table
 
         $select = $table->getSelectForFindBy($params, $recordsPerPage, $currentPage);
 
-        $user = current_user();
-        $select->where('user_id <>'.$user->id);
-
         // Add specific sorting
         $select->join(array('users' => get_db()->Users), 'participative_carts.user_id = users.id', array());
         if (isset($sort_field) && strpos($sort_field, '.')) {

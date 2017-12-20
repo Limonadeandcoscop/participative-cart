@@ -129,11 +129,30 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
             throw new Exception("A user can't send a request to on of these cart");
         }
 
+        if (!($cartUser = get_record_by_id("User", $cart->user_id))) {
+            throw new Exception("Invalid cart user");
+        }
+
         $cartRequest = new ParticipativeCartRequest();
         $cartRequest->cart_id   = $cart_id;
         $cartRequest->user_id   = $user->id;
         $cartRequest->status    = ParticipativeCart::REQUEST_STATUS_WAITING;
         $cartRequest->save();
+
+        $url = absolute_url(array('cart-id' => $cart->id), 'pc_view_cart');
+
+        // Send an email to cart owner
+        $body  = "A user has requested an access to your cart.<br/><br />";
+        $body .= "User : \"".$user->name."\"<br/>";
+        $body .= "Cart : \"".$cart->name."\"<br/><br />";
+        $body .= "You can approuve this request at this address : <br/>";
+        $body .= "<a href='".$url."'>View cart</a>";
+
+        $params['to']           = $cartUser->email;
+        $params['recipient']    = $cartUser->name;
+        $params['subject']      = __("New request to access your cart");
+        $params['body']         = $body;
+        send_mail($params);
 
         $this->getResponse()->setHeader('Content-Type', 'application/json');
 

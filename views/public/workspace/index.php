@@ -91,12 +91,12 @@ echo head(array('title' => $title, 'bodyclass' => 'workspace'));
             <div class="nb-notes"><strong><?php echo __('Items') ?></strong> : <?php echo count($cart->getItems(false)); ?></div>
 		</div>
 	<?php endforeach; ?>
+    <?php echo pagination_links(); ?>
 </div>
 <?php else: ?>
     <p class="no-carts"><?php echo __("You don't have any cart in your workspace"); ?></p>
 <?php endif; ?>
 
-<?php echo pagination_links(); ?>
 
 <?php echo foot(); ?>
 

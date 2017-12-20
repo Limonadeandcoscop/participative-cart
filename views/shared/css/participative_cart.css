@@ -51,6 +51,12 @@
   cursor:no-drop;
 }
 
+.button.waiting {
+  background:#888;
+  cursor:wait;
+}
+
+
 /*
  * Global modals styles (specific styles are in partials)
  */
@@ -188,7 +194,7 @@
  * Workspace page
  */
 
-.workspace .facet li {
+.workspace .facet.tags li {
   list-style:none;
   display: block;
 }

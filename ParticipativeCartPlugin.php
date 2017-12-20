@@ -12,6 +12,7 @@
 
 define('PARTICIPATIVE_CART_DIR', dirname(__FILE__));
 
+require_once PARTICIPATIVE_CART_DIR . '/functions.php';
 require_once PARTICIPATIVE_CART_DIR . '/controllers/ParticipativeCartController.php';
 
 /**
@@ -99,6 +100,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
           UNIQUE KEY `id` (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $this->_db->query($sql);
+
     }
 
 
@@ -116,6 +118,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
         $db->query($sql);
         $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCartNotes`";
         $db->query($sql);
+
     }
 
     /**

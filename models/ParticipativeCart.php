@@ -29,6 +29,10 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
     const CART_STATUS_PRIVATE   = 'private';
     const CART_STATUS_PUBLIC    = 'public';
 
+    // Status constants for a request
+    const REQUEST_STATUS_WAITING   = 'waiting';
+    const REQUEST_STATUS_ACCEPTED  = 'accepted';
+
     /**
      * Get the next cart order of current user
      *
@@ -202,7 +206,7 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
 
     /**
      * Check if a cart has a given tag
-     * If an array is given, returns TRUE if the cart contains at least one value of $tags_id
+     * If an array is given, returns TRUE if the cart contains all the values $tags_id
      *
      * @param Integer|Array $tags_id The tag ID or an array of tags IDs
      * @return Boolean
@@ -221,8 +225,8 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
 
         $intersect = array_intersect($ids, $tags_id);
 
-        //if (count($intersect) == count($tags_id))
-        if (count($intersect)>0)
+        if (count($intersect) == count($tags_id))
+        // if (count($intersect)>0)
             return true;
 
         return false;
@@ -289,6 +293,5 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         $results    = $table->findBy(array('cart_id' => $this->id));
         return $results;
     }
-
 
 }

@@ -13,10 +13,6 @@
 
 class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractActionController {
 
-    public function init() {
-
-    }
-
 
     /**
      * Get carts viewable by the user

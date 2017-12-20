@@ -17,6 +17,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
 
     }
 
+
     /**
      * Get carts viewable by the user
      * Activate pagination and sorts
@@ -32,7 +33,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         if ($users = @$params['users'])
             $params['user_id'] = explode(',', $users);
 
-        // Get tags in $tags varaible and Unset tags params
+        // Get tags in $tags variable and Unset tags params
         if (isset($params['tags'])) {
             $tags = array_map('intval', explode(',', $params['tags']));
             $tags = array_filter($tags);
@@ -68,7 +69,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         ));
 
         // Retrieve informations for facets
-        foreach($allCarts as $key => $cart) {
+        foreach($carts as $key => $cart) {
             // Users facet
             $user = $cart->getUser();
             $refinements['users'][$user->id]['name'] = $user->name;
@@ -97,6 +98,53 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         $this->view->params         = $this->getAllParams();
         $this->view->original_uri   = $_SESSION['orginal_uri'];
     }
+
+
+    /**
+     * Send request to a cart
+     *
+     * @return JSON
+     */
+    public function sendRequestAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        if (!$this->_request->isXmlHttpRequest()) return;
+
+        if (!($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("Invalid cart ID");
+        }
+
+       if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart");
+        }
+
+
+        if (!($user = current_user())) {
+            throw new Exception("Invalid user ID");
+        }
+
+        if ($user->id == $cart->user_id) {
+            throw new Exception("A user can't send a request to on of these cart");
+        }
+
+        $cartRequest = new ParticipativeCartRequest();
+        $cartRequest->cart_id   = $cart_id;
+        $cartRequest->user_id   = $user->id;
+        $cartRequest->status    = ParticipativeCart::REQUEST_STATUS_WAITING;
+        $cartRequest->save();
+
+        $this->getResponse()->setHeader('Content-Type', 'application/json');
+
+        $json = array();
+
+        $json['status']  = 'ok';
+
+        echo json_encode($json); // Returns JSON like {"status":"ok"}
+    }
+
+
 
 }
 

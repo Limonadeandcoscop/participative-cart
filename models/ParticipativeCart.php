@@ -294,4 +294,17 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         return $results;
     }
 
+    /**
+     * Check if a user has always send a request for this cart
+     *
+     * @param String $user_id The user ID (optional : if not provided get current user)
+     * @return Boolean|ParticipativeCartRequest The ParticipativeCartRequest otherwise false
+     */
+    public function haveRequestFromUser($user_id = null) {
+
+        if (!$user_id) $user_id = current_user()->id;
+        $table      = get_db()->getTable('ParticipativeCartRequest');
+        $results    = $table->findBy(array('cart_id' => $this->id, 'user_id' => $user_id));
+        return @$results[0];
+    }
 }

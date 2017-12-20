@@ -150,8 +150,4 @@ jQuery(document).ready(function($) {
 </script>
 
 
-<?php
-    // Call confirmation modal
-    echo $this->partial('workspace/modal-send-request-confirmation.php');
-?>
 

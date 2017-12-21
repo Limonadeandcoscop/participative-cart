@@ -225,3 +225,15 @@
   bottom:20px;
   right: 0
 }
+
+
+/*
+ * Memebers page
+ */
+
+
+.members .request {
+  padding-bottom:20px;
+  margin-bottom:20px;
+  border-bottom:1px solid #ccc;
+}

@@ -112,10 +112,9 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
             throw new Exception("Invalid cart ID");
         }
 
-       if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
             throw new Exception("Invalid cart");
         }
-
 
         if (!($user = current_user())) {
             throw new Exception("Invalid user ID");
@@ -160,6 +159,49 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
     }
 
 
+    /**
+     * Delete a request
+     *
+     * @return void
+     */
+    public function deleteRequestAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        if (!($request_id = $this->getParam('request-id'))) {
+            throw new Exception("Invalid request ID");
+        }
+
+        if (!($request = get_record_by_id("ParticipativeCartRequest", $request_id))) {
+            throw new Exception("Invalid request");
+        }
+
+        $request->delete();
+
+        $this->_helper->redirector->gotoRoute(array('cart-id' => $request->cart_id), 'pc_members');
+    }
+
+    /**
+     *
+     * @return HTML
+     */
+    public function membersAction() {
+
+        if (!($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("Invalid cart ID");
+        }
+
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart");
+        }
+
+        if (current_user()->id != $cart->user_id) {
+            throw new Exception("The cart #".$cart->id." doesn't belongs to current user");
+        }
+
+        $this->view->waitingRequests = $cart->getWaitingRequests();
+    }
 
 }
 

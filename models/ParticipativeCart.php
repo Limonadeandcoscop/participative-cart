@@ -294,6 +294,7 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         return $results;
     }
 
+
     /**
      * Check if a user has always send a request for this cart
      *
@@ -307,4 +308,46 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         $results    = $table->findBy(array('cart_id' => $this->id, 'user_id' => $user_id));
         return @$results[0];
     }
+
+
+    /**
+     * Returns cart requests
+     *
+     * @param String optional $status Precise the status of requests to retrieve
+     * @return Array of ParticipativeCartRequest
+     */
+    public function getRequests($status = false)
+    {
+        $params['cart_id'] = $this->id;
+
+        if ($status)
+            $params['status'] = $status;
+
+        $requests   = get_db()->getTable('ParticipativeCartRequest')->findBy($params);
+
+        return $requests;
+    }
+
+
+    /**
+     * Returns waiting cart requests
+     *
+     * @return Array of ParticipativeCartRequest
+     */
+    public function getWaitingRequests()
+    {
+        return $this->getRequests(ParticipativeCart::REQUEST_STATUS_WAITING);
+    }
+
+
+    /**
+     * Returns accepted cart requests
+     *
+     * @return Array of ParticipativeCartRequest
+     */
+    public function getAcceptedRequests()
+    {
+        return $this->getRequests(ParticipativeCart::REQUEST_STATUS_ACCEPTED);
+    }
+
 }

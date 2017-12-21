@@ -82,6 +82,8 @@ echo head(array('title' => $title, 'bodyclass' => 'workspace'));
                         <?php else: ?>
                             <a href="<?php echo url(array('cart-id' => $cart['id']), 'pc_send_request') ?>" class="button send-request"><?php echo __('Send request') ?></a>
                         <?php endif; ?>
+                   <?php else: ?>
+                        <a href="<?php echo url(array('cart-id' => $cart['id']), 'pc_members') ?>" class="button members"><?php echo __('Members') ?></a>
                    <?php endif; ?>
                 <?php else: // The user is not logged in ?>
                     <p class="notice" style="font-style:italic;float:right"><?php echo __('You must be logged in for send a request') ?><a href="<?php echo url('guest-user/user/login') ?>"> <?php echo __('Login'); ?></a></p>

@@ -10,14 +10,23 @@ echo head(array('title' => $title, 'bodyclass' => 'members'));
 <?php if (count($waitingRequests)): ?>
 
     <?php foreach ($waitingRequests as $request): ?>
+        <?php $user = $request->getUser(); ?>
         <div class="request">
             <div class="user">
-                <div class="name"><?php echo $request->getUser()->name; ?></div>
+                <div class="name"><?php echo $user->name; ?></div>
                 <a href="#"><?php echo __('View profile') ?></a>
-                <div class="infos">
-                    <span><?php echo __('Profession').' : ' ?><?php echo __('TODO'); ?></span><br />
-                    <span><?php echo __('Institution/Society').' : ' ?><?php echo __('TODO'); ?></span>
-                </div>
+                <?php $profession = $user->profession; ?>
+                <?php $institution = $user->institution; ?>
+                <?php if ($profession || $institution): ?>
+                    <div class="infos">
+                        <?php if (strlen(trim($profession))): ?>
+                            <span><?php echo __('Profession').' : ' ?><?php echo $profession ?></span><br />
+                        <?php endif; ?>
+                        <?php if (strlen(trim($institution))): ?>
+                            <span><?php echo __('Institution/Society').' : ' ?><?php echo $institution; ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
                 <div class="rights">
                     <select>
                         <option value=""><?php echo __('Choose') ?></option>

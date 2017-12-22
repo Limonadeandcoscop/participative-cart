@@ -45,6 +45,16 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
         $user = get_record_by_id('User', $this->user_id);
         if (get_class($user) != 'User')
             throw new Exception("Invalid user ID");
+
+        // Retrieve additionnal infos from GuestUser plugin
+        if (plugin_is_active("GuestUser") && class_exists('GuestUserInfo')) {
+            $userInfos = get_db()->getTable("GuestUserInfo")->findBy(array('user_id' => $user->id));
+            if ($userInfos) {
+                $user->gender       = $userInfos[0]->gender;
+                $user->profession   = $userInfos[0]->profession;
+                $user->institution  = $userInfos[0]->institution;
+            }
+        }
         return $user;
     }
 
@@ -64,3 +74,4 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
 
 
 }
+

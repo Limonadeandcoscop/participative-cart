@@ -60,8 +60,9 @@ echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
 	</div>
 
 	<div class="group status">
-		<label for="status"><?php echo __('Status') ?> <span class="info">&nsbp;(<?php echo __('private carts are not published to other users') ?>)</span></label>
+		<label for="status"><?php echo __('Status') ?> <span class="info">&nbsp;(<?php echo __('private carts are not published to other users') ?>)</span></label>
 		<p>
+			<?php // TODO : Disable functionality if the cart is public and have notes */ ?>
 			<input type="checkbox" <?php if ($nb_items == 0) echo "disabled" ?> name="status" value="private" <?php if ($cart->status == ParticipativeCart::CART_STATUS_PRIVATE) echo 'checked' ?> /><?php echo __('Private') ?>
 			<?php if ($nb_items == 0): ?>
 				<span class="warning">&nbsp;<?php echo __('a cart can be define as public only if it contains items') ?></span>

@@ -226,6 +226,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
     /**
      * Delete a cart
+     * - Send an email to users if there's requests on the cart
      *
      * @param Integer $cart-id The ID of the cart
      * @return JSON
@@ -243,6 +244,19 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         // Check cart
         if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
             throw new Exception("Invalid cart");
+        }
+
+        // TODO : Check that the cart has no notes
+
+        // Send an email to current requests users
+        $cartRequests = $cart->getRequests();
+        if (count($cartRequests)) {
+            foreach ($cartRequests as $request) {
+                if (!($user = get_record_by_id("User", $request->user_id))) {
+                    throw new Exception("Invalid item ID");
+                }
+                $this->_deleteCartEmail($cart, $user);
+            }
         }
 
         $cart->delete();
@@ -361,6 +375,27 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         }
 
         $this->_helper->redirector->gotoRoute(array('cart-id' => $cart_id), 'pc_view_cart');
+    }
+
+
+    /**
+     * Send an email to requester when the user deletes a cart
+     *
+     * @param ParticipativeCart $cart The cart
+     * @param User $requester The requester user
+     * @return void
+     */
+    private function _deleteCartEmail($cart, $requester) {
+
+        $body  = "A user has deleted a cart.<br/><br />";
+        $body .= "User : \"".$cart->getUser()->name."\"<br/>";
+        $body .= "Cart name : \"".$cart->name."\"<br/><br />";
+
+        $params['to']           = $requester->email;
+        $params['recipient']    = $requester->name;
+        $params['subject']      = __("A cart has been deleted");
+        $params['body']         = $body;
+        send_mail($params);
     }
 }
 

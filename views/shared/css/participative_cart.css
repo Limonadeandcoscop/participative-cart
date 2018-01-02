@@ -191,6 +191,16 @@
 
 
 /*
+ * Item page
+ */
+
+.cart.item #save-note {
+  float:right;
+  margin-top:5px;
+}
+
+
+/*
  * Workspace page
  */
 
@@ -228,7 +238,7 @@
 
 
 /*
- * Memebers page
+ * Members page
  */
 
 

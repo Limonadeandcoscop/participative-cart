@@ -27,4 +27,36 @@ class ParticipativeCartItem extends Omeka_Record_AbstractRecord
 	}
 
 
+    /**
+     * Get notes of the item
+     *
+     * @return Array of ParticipativeCartItemNotes objects
+     */
+    public function getNotes() {
+
+		$params['cart_item_id']  = $this->id;
+        $params['sort_field']   = 'order';
+        $params['sort_dir']     = 'a';
+
+        $table      = get_db()->getTable('ParticipativeCartItemNote');
+        $results    = $table->findBy($params);
+        return $results;
+    }
+
+
+	/**
+     * Get the next order of note for this item
+     *
+     * @return Integer The next order
+     */
+    public function getNextOrder() {
+
+        $notes = $this->getNotes();
+
+        if (!$notes) return 1;
+
+        return end($notes)->order + 1;
+    }
+
+
 }

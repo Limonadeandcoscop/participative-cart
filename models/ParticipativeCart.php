@@ -33,6 +33,7 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
     const REQUEST_STATUS_WAITING   = 'waiting';
     const REQUEST_STATUS_ACCEPTED  = 'accepted';
 
+
     /**
      * Get the next cart order of current user
      *

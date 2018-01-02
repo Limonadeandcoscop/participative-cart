@@ -411,5 +411,67 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $params['body']         = $body;
         send_mail($params);
     }
+
+
+    /**
+     * Display an item of cart
+     *
+     * @return HTML
+     */
+    public function viewItemAction() {
+
+        // Check cart ID
+        if (!($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("The cart ID is required");
+        }
+
+        // Check cart
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart");
+        }
+
+        // Check item ID
+        if (!($item_id = $this->getParam('item-id'))) {
+            throw new Exception("The item ID is required");
+        }
+
+        // Check item
+        if (!($item = get_record_by_id("Item", $item_id))) {
+            throw new Exception("Invalid item");
+        }
+
+        // Check access rights
+        if ($cart->getUser()->id != current_user()->id && !$cart->userCanWiewCart()) {
+            throw new Exception("You don't have any rights to access this cart");
+        }
+
+        // Get record
+        $cartItem = $this->_tableCartItem->findBy(array('cart_id' => $cart_id, 'item_id' => $item_id));
+        if (!($cartItem = $cartItem[0])) {
+            throw new Exception("Invalid cart item");
+        }
+
+        $itemNotes = $cartItem->getNotes();
+
+        if ($this->getRequest()->isPost()) {
+
+            if ($note = $this->getParam('note')) {
+
+                $itemNote = new ParticipativeCartItemNote;
+                $itemNote->cart_item_id = $cartItem->id;
+                $itemNote->user_id = current_user()->id;
+                $itemNote->order = $cartItem->getNextOrder();
+                $itemNote->note = $note;
+                $itemNote->save();
+
+                $this->_helper->redirector->gotoRoute(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_view_item');
+            }
+        }
+
+        $this->view->cart   = $cart;
+        $this->view->item   = $item;
+        $this->view->notes  = $itemNotes;
+    }
+
 }
 

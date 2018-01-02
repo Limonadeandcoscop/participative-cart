@@ -107,7 +107,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
           `cart_id` int(10) unsigned NOT NULL,
           `user_id` int(10) unsigned NOT NULL,
           `status` varchar(20) NOT NULL DEFAULT '".ParticipativeCart::REQUEST_STATUS_WAITING."',
-          `rights` varchar(20),
+          `rights` varchar(50),
           `requested` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
           `accepted` timestamp NULL,
           PRIMARY KEY (`id`),

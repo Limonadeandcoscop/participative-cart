@@ -182,9 +182,9 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         $this->_helper->redirector->gotoRoute(array('cart-id' => $request->cart_id), 'pc_members');
     }
 
+
     /**
-     *
-     * @return HTML
+     * Manage request and rights
      */
     public function membersAction() {
 
@@ -200,7 +200,27 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
             throw new Exception("The cart #".$cart->id." doesn't belongs to current user");
         }
 
-        $this->view->waitingRequests = $cart->getWaitingRequests();
+        if ($this->getRequest()->isPost()) {
+
+            $rights         = $this->getParam('rights');
+            $request_id     = $this->getParam('request_id');
+            $request_type   = $this->getParam('request_type');
+
+            if (strlen(trim($rights))) {
+
+                // Update request
+                if (!($request = get_record_by_id("ParticipativeCartRequest", $request_id))) {
+                    throw new Exception("Invalid request");
+                }
+                $request->status    = ParticipativeCart::REQUEST_STATUS_ACCEPTED;
+                $request->rights    = $rights;
+                $request->accepted  = date("Y-m-d H:i:s");
+                $request->save();
+            }
+        }
+
+        $this->view->waitingRequests    = $cart->getWaitingRequests();
+        $this->view->acceptedRequests   = $cart->getAcceptedRequests();
     }
 
 }

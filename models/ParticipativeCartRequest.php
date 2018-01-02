@@ -29,6 +29,8 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
      */
     protected function _validate()
     {
+        if ($this->id) return true;
+
         $res = $this->getTable()->findBy(array('user_id' => $this->user_id, 'cart_id' => $this->cart_id));
         if (count($res)) {
         	 throw new Exception("This user has already sended a request for this cart");

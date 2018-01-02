@@ -38,9 +38,17 @@ class ParticipativeCartItem extends Omeka_Record_AbstractRecord
         $params['sort_field']   = 'order';
         $params['sort_dir']     = 'a';
 
-        $table      = get_db()->getTable('ParticipativeCartItemNote');
-        $results    = $table->findBy($params);
-        return $results;
+        $table    = get_db()->getTable('ParticipativeCartItemNote');
+        $notes    = $table->findBy($params);
+
+        if (count($notes)) {
+
+            $table = get_db()->getTable('ParticipativeCartItemComment');
+            foreach($notes as $note) {
+                $note->comments = $note->getComments();
+            }
+        }
+        return $notes;
     }
 
 

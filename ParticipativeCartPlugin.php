@@ -129,6 +129,21 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $this->_db->query($sql);
 
+        $sql  = "
+        CREATE TABLE IF NOT EXISTS `{$this->_db->ParticipativeCartItemComments}` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `cart_item_note_id` int(10) unsigned NOT NULL,
+          `comment_id` int(10) unsigned NULL,
+          `user_id` int(10) unsigned NOT NULL,
+          `level` int(3) unsigned NOT NULL,
+          `comment` mediumtext NOT NULL,
+          `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `id` (`id`)
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $this->_db->query($sql);
+
     }
 
 
@@ -149,6 +164,8 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
         $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCartRequests`";
         $db->query($sql);
         $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCartItemNotes`";
+        $db->query($sql);
+        $sql = "DROP TABLE IF EXISTS `$db->ParticipativeCartItemComments`";
         $db->query($sql);
     }
 

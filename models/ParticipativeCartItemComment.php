@@ -10,16 +10,17 @@
 
 
 /**
- * A ParticipativeCartItemNote row.
+ * A ParticipativeCartItemComment row.
  *
  * @package Omeka\Plugins\ParticipativeCart
  */
-class ParticipativeCartItemNote extends Omeka_Record_AbstractRecord
+class ParticipativeCartItemComment extends Omeka_Record_AbstractRecord
 {
-	public $cart_item_id;
+	public $cart_item_note_id;
+	public $comment_id;
 	public $user_id;
-	public $order;
-    public $note;
+	public $level;
+    public $comment;
     public $inserted;
     public $updated;
 
@@ -35,22 +36,5 @@ class ParticipativeCartItemNote extends Omeka_Record_AbstractRecord
         if (get_class($user) != 'User')
             throw new Exception("Invalid user ID");
         return $user;
-    }
-
-     /**
-     * Get comments of the note
-     *
-     * @return Array of ParticipativeCartItemComments objects
-     */
-    public function getComments() {
-
-		$params['cart_item_note_id']  = $this->id;
-        $params['sort_field']   = 'inserted';
-        $params['sort_dir']     = 'a';
-
-        $table 		= get_db()->getTable('ParticipativeCartItemComment');
-        $comments 	= $table->findBy($params);
-
-        return $comments;
     }
 }

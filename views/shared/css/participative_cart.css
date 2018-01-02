@@ -194,9 +194,16 @@
  * Item page
  */
 
-.cart.item #save-note {
-  float:right;
-  margin-top:5px;
+.cart.item .note {
+  margin-bottom:30px;
+}
+
+.cart.item .notes form {
+  display: none;
+}
+
+.cart.item .notes .add-note form {
+  display: block;
 }
 
 

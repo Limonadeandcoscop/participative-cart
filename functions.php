@@ -13,6 +13,17 @@ function cut_string($str, $width = 250) {
 
 
 /**
+ * Format a Mysql date in french format
+ *
+ * @param int $date The Mysql date
+ * @return string
+ */
+function get_date($date) {
+    return date('F j, Y, g:i a', strtotime($date));
+}
+
+
+/**
  * Send an email
  *
  * If $params['to'] isn't specify, send the email to current user

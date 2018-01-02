@@ -455,17 +455,36 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         if ($this->getRequest()->isPost()) {
 
-            if ($note = $this->getParam('note')) {
+            if (strlen(trim($this->getParam('save-note')))) { // The user has clicked "save the note" button
 
-                $itemNote = new ParticipativeCartItemNote;
-                $itemNote->cart_item_id = $cartItem->id;
-                $itemNote->user_id = current_user()->id;
-                $itemNote->order = $cartItem->getNextOrder();
-                $itemNote->note = $note;
-                $itemNote->save();
+                if ($note = $this->getParam('note')) {
+                    $itemNote = new ParticipativeCartItemNote;
+                    $itemNote->cart_item_id = $cartItem->id;
+                    $itemNote->user_id = current_user()->id;
+                    $itemNote->order = $cartItem->getNextOrder();
+                    $itemNote->note = $note;
+                    $itemNote->save();
+                    $this->_helper->redirector->gotoRoute(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_view_item');
+                }
 
-                $this->_helper->redirector->gotoRoute(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_view_item');
+            } else { // The user has clicked "save the reply" button
+
+                if ($comment = $this->getParam('comment')) {
+
+                    $level = $this->getParam('level');
+                    $level = $level + 1;
+
+                    $itemComment = new ParticipativeCartItemComment;
+                    $itemComment->cart_item_note_id = $this->getParam('note-id');
+                    $itemComment->comment_id = $this->getParam('comment-id');
+                    $itemComment->user_id = current_user()->id;
+                    $itemComment->level = $level;
+                    $itemComment->comment = $comment;
+                    $itemComment->save();
+                    $this->_helper->redirector->gotoRoute(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_view_item');
+                }
             }
+
         }
 
         $this->view->cart   = $cart;

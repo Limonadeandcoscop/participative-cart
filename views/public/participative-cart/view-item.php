@@ -30,8 +30,33 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 		<?php if (count($notes)): ?>
 		<?php foreach ($notes as $note): ?>
 			<div class="note">
-				<?php echo $note->note; ?>
-			</div>
+				<?php echo $note->note; ?> <span class="info">(<?php echo $note->getUser()->name ?>)</span>
+				<a class="reply-link" href="#"><?php echo __('Reply to note') ?></a>
+				<form action="#" method="post">
+					<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
+					<textarea rows="3" name="comment"></textarea>
+					<input class="save-reply" type="submit" value="<?php echo __('Save the reply') ?>" />
+					<input class="cancel-reply" type="button" value="<?php echo __('Cancel') ?>" />
+				</form>
+				<?php if (count($note->comments)): ?>
+					<div class="comments">
+					<?php foreach ($note->comments as $comment): ?>
+						<div class="comment" style="margin-left:<?php echo (50*$comment->level) ?>px;">
+							<?php echo $comment->comment; ?> <span class="info">(<?php echo $comment->getUser()->name ?> - <?php echo get_date($comment->inserted) ?>)</span>
+							<a class="reply-link" href="#"><?php echo __('Reply') ?></a>
+							<form action="#" method="post">
+								<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
+								<input type="hidden" name="comment-id" value="<?php echo $comment->id ?>" />
+								<input type="hidden" name="level" value="<?php echo $comment->level ?>" />
+								<textarea rows="3" name="comment"></textarea>
+								<input class="save-reply" type="submit" value="<?php echo __('Save the reply') ?>" />
+								<input class="cancel-reply" type="button" value="<?php echo __('Cancel') ?>" />
+							</form>
+						</div>
+					<?php endforeach; ?>
+					</div><!--/comment-->
+				<?php endif; ?>
+			</div><!--/note-->
 		<?php endforeach; ?>
 		<?php endif; ?>
 
@@ -39,10 +64,10 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 			<h3><?php echo __('Add note') ?></h3>
 			<form action="#" method="post">
 				<textarea rows="3" name="note"></textarea>
-				<input id="save-note" type="submit" value="<?php echo __('Save') ?>" />
+				<input id="save-note" type="submit" value="<?php echo __('Save the note') ?>" name="save-note" />
 			</form>
 		</div>
-	</div>
+	</div><!--/notes-->
 
 </div><!--/left-area-->
 
@@ -63,6 +88,23 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 <?php echo foot(); ?>
 
 
+<script>
+jQuery(document).ready(function($) {
+
+	$('.cart.item .reply-link').click(function() {
+
+		var form  		= $(this).next('form');
+		var cancel 		= form.find('.cancel-reply');
+		var textarea 	= form.find('textarea');
+
+		cancel.click(function() {form.hide()});
+		textarea.val('');
+		form.toggle();
+		return false;
+
+	});
+});
+</script>
 
 
 

@@ -17,7 +17,7 @@ class Table_ParticipativeCart extends Omeka_Db_Table
 {
 
 	/**
-     * Get the cart of current user
+     * Get the carts of current user
      *
      * @param Boolean $with_items whether or not retrieve items of the cart
      * @param Boolean $status Returns only cart with a given status
@@ -42,6 +42,37 @@ class Table_ParticipativeCart extends Omeka_Db_Table
         }
         return $carts;
     }
+
+
+    /**
+     * Get the carts shared with current user
+     *
+     * @param Boolean $with_items whether or not retrieve items of the cart
+     * @return Array of ParticipativeCart objects
+     */
+    public static function getSharedCarts($with_items = false) {
+
+        $user = current_user();
+
+        $params['user_id']  = $user->id;
+        $params['status']   = ParticipativeCart::REQUEST_STATUS_ACCEPTED;
+
+        $cartsRequests = get_db()->getTable('ParticipativeCartRequest')->findBy($params);
+
+        $carts = array();
+        foreach ($cartsRequests as $request) {
+            $carts[] = $request->getCart();
+        }
+
+        if (!$with_items)
+            return $carts;
+
+        foreach($carts as $cart) {
+            $cart->items = $cart->getItems();
+        }
+        return $carts;
+    }
+
 
 
     /**

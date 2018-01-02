@@ -34,7 +34,20 @@ echo head(array('title' => $title, 'bodyclass' => 'carts view'));
 		<?php endforeach; ?>
 	<?php endif; ?>
 
-	<?php if (!count($userCartsPrivate) && !count($userCartsPublic)): ?>
+
+	<?php if (count($sharedCarts)): ?>
+		<h3><?php echo __('Shared carts') ?></h3>
+		<?php foreach($sharedCarts as $cart): ?>
+		<div class="cart">
+			<?php $c = count($cart->items) ?>
+			<strong><?php echo $cart->name; ?></strong>
+			<div class="owner"><?php echo __('Owner') ?> : <?php echo $cart->getUser()->name; ?></div>
+			<a class="view" href="<?php echo url(array('cart-id' => $cart->id), 'pc_view_cart'); ?>"><?php echo __('View cart') ?> (<?php echo $c ?> item<?php echo ($c>1)?'s':'' ?>)</a>
+		</div>
+		<?php endforeach; ?>
+	<?php endif; ?>
+
+	<?php if (!count($userCartsPrivate) && !count($userCartsPublic)  && !count($sharedCarts)): ?>
 		<p><?php echo __("You don't have a cart yet") ?></p>
 	<?php endif; ?>
 

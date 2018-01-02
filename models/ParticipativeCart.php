@@ -350,4 +350,24 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         return $this->getRequests(ParticipativeCart::REQUEST_STATUS_ACCEPTED);
     }
 
+
+    /**
+     * Check if a given user can view the cart
+     *
+     * @param $user optionnal The user, otherwhise current user
+     * @return Boolean
+     */
+    public function userCanWiewCart($user = false)
+    {
+        if (!$user) $user = current_user();
+
+        $params['cart_id']  = $this->id;
+        $params['user_id']  = $user->id;
+        $params['status']   = self::REQUEST_STATUS_ACCEPTED;
+
+        $request   = get_db()->getTable('ParticipativeCartRequest')->findBy($params);
+        if (count($request)) return true;
+
+        return false;
+    }
 }

@@ -23,6 +23,14 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
     public $requested;
     public $accepted;
 
+    // Constants for rights
+    const VIEW_ITEMS                    = 'view_items';
+    const VIEW_ITEMS_NOTES              = 'view_items_notes';
+    const VIEW_ITEMS_NOTES_COMMENTS     = 'view_itemsçcomments';
+    const ADD_ITEMS_NOTES               = 'add_items_notes';
+    const ADD_ITEMS_NOTES_COMMENTS      = 'add_items_notes_comments';
+    const DELETE_ITEMS_NOTES            = 'delete_items_notes';
+    const DELETE_ITEMS_NOTES_COMMENTS   = 'delete_items_notes_comments';
 
     /**
      * In order to validate a request, ensure that a request a the user doesn't exists for the cart

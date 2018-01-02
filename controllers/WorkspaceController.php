@@ -219,6 +219,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
             }
         }
 
+        $this->view->cart               = $cart;
         $this->view->waitingRequests    = $cart->getWaitingRequests();
         $this->view->acceptedRequests   = $cart->getAcceptedRequests();
     }

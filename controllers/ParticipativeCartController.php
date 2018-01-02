@@ -58,6 +58,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         $userCartsPrivate   = $this->_tableCart->getuserCarts('with_items', ParticipativeCart::CART_STATUS_PRIVATE);
         $userCartsPublic    = $this->_tableCart->getuserCarts('with_items', ParticipativeCart::CART_STATUS_PUBLIC);
+        $sharedCarts        = $this->_tableCart->getSharedCarts('with_items');
 
         // Retrieve all tags (for 'create cart' modal)
         $participativeCartTagTable = get_db()->getTable('ParticipativeCartTag');
@@ -67,6 +68,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         $this->view->userCartsPrivate   = $userCartsPrivate;
         $this->view->userCartsPublic    = $userCartsPublic;
+        $this->view->sharedCarts        = $sharedCarts;
     }
 
 
@@ -78,9 +80,21 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function viewCartAction() {
 
+        // Check cart ID
         if (!($cart_id = $this->getParam('cart-id'))) {
             throw new Exception("The cart ID is required");
         }
+
+        // Check cart
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart");
+        }
+
+        // Check access rights
+        if ($cart->getUser()->id != current_user()->id && !$cart->userCanWiewCart()) {
+            throw new Exception("You don't have any rights to access this cart");
+        }
+
 
         $cart = get_record_by_id("ParticipativeCart", $cart_id);
         $cart->notes = $cart->getCartNotes();

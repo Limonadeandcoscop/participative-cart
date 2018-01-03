@@ -451,7 +451,12 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
             throw new Exception("Invalid cart item");
         }
 
-        $itemNotes = $cartItem->getNotes();
+        // Get request
+        $request = $cart->haveRequestFromUser();
+        if (!$request) {
+            throw new Exception("User is not allowed to access this cart");
+        }
+
 
         if ($this->getRequest()->isPost()) {
 
@@ -471,8 +476,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
                 if ($comment = $this->getParam('comment')) {
 
-                    $level = $this->getParam('level');
-                    $level = $level + 1;
+                    $level = $this->getParam('level') + 1;
 
                     $itemComment = new ParticipativeCartItemComment;
                     $itemComment->cart_item_note_id = $this->getParam('note-id');
@@ -487,9 +491,11 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         }
 
-        $this->view->cart   = $cart;
-        $this->view->item   = $item;
-        $this->view->notes  = $itemNotes;
+        $this->view->cart       = $cart;
+        $this->view->item       = $item;
+        $this->view->request    = $request;
+        $this->view->notes      = $cartItem->getNotes();
+
     }
 
 }

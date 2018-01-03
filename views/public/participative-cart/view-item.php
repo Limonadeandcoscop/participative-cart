@@ -24,50 +24,58 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 	<h1><?php echo $title ?></h1>
 	<?php echo $this->partial('participative-cart/view-item-content.php', array('item' => $item)); ?>
 
-	<div class="notes">
-		<h2><?php echo __('Notes') ?></h2>
+	<?php if ($request->userCanViewNotes()): ?>
+		<div class="notes">
+			<h2><?php echo __('Notes') ?></h2>
 
-		<?php if (count($notes)): ?>
-		<?php foreach ($notes as $note): ?>
-			<div class="note">
-				<?php echo $note->note; ?> <span class="info">(<?php echo $note->getUser()->name ?>)</span>
-				<a class="reply-link" href="#"><?php echo __('Reply to note') ?></a>
+			<?php if (count($notes)): ?>
+			<?php foreach ($notes as $note): ?>
+				<div class="note">
+					<strong><?php echo $note->note; ?></strong>
+					<span class="info">(<?php echo $note->getUser()->name ?>)</span>
+					<a class="reply-link" href="#"><?php echo __('Reply to note') ?></a>
+					<form action="#" method="post">
+						<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
+						<textarea rows="3" name="comment"></textarea>
+						<input class="save-reply" type="submit" value="<?php echo __('Save the reply') ?>" />
+						<input class="cancel-reply" type="button" value="<?php echo __('Cancel') ?>" />
+					</form>
+
+					<?php if ($request->userCanViewComments()): ?>
+						<?php if (count($note->comments)): ?>
+							<div class="comments">
+							<?php foreach ($note->comments as $comment): ?>
+								<div class="comment" style="margin-left:<?php echo (50*$comment->level) ?>px;">
+									<strong><?php echo $comment->comment; ?></strong>
+									<span class="info">(<?php echo $comment->getUser()->name ?> - <?php echo get_date($comment->inserted) ?>)</span>
+									<a class="reply-link" href="#"><?php echo __('Reply') ?></a>
+									<form action="#" method="post">
+										<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
+										<input type="hidden" name="comment-id" value="<?php echo $comment->id ?>" />
+										<input type="hidden" name="level" value="<?php echo $comment->level ?>" />
+										<textarea rows="3" name="comment"></textarea>
+										<input class="save-reply" type="submit" value="<?php echo __('Save the reply') ?>" />
+										<input class="cancel-reply" type="button" value="<?php echo __('Cancel') ?>" />
+									</form>
+								</div>
+							<?php endforeach; ?>
+							</div><!--/comment-->
+						<?php endif; ?>
+					<?php endif; ?>
+
+				</div><!--/note-->
+			<?php endforeach; ?>
+			<?php endif; ?>
+
+			<div class="add-note">
+				<h3><?php echo __('Add note') ?></h3>
 				<form action="#" method="post">
-					<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
-					<textarea rows="3" name="comment"></textarea>
-					<input class="save-reply" type="submit" value="<?php echo __('Save the reply') ?>" />
-					<input class="cancel-reply" type="button" value="<?php echo __('Cancel') ?>" />
+					<textarea rows="3" name="note"></textarea>
+					<input id="save-note" type="submit" value="<?php echo __('Save the note') ?>" name="save-note" />
 				</form>
-				<?php if (count($note->comments)): ?>
-					<div class="comments">
-					<?php foreach ($note->comments as $comment): ?>
-						<div class="comment" style="margin-left:<?php echo (50*$comment->level) ?>px;">
-							<?php echo $comment->comment; ?> <span class="info">(<?php echo $comment->getUser()->name ?> - <?php echo get_date($comment->inserted) ?>)</span>
-							<a class="reply-link" href="#"><?php echo __('Reply') ?></a>
-							<form action="#" method="post">
-								<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
-								<input type="hidden" name="comment-id" value="<?php echo $comment->id ?>" />
-								<input type="hidden" name="level" value="<?php echo $comment->level ?>" />
-								<textarea rows="3" name="comment"></textarea>
-								<input class="save-reply" type="submit" value="<?php echo __('Save the reply') ?>" />
-								<input class="cancel-reply" type="button" value="<?php echo __('Cancel') ?>" />
-							</form>
-						</div>
-					<?php endforeach; ?>
-					</div><!--/comment-->
-				<?php endif; ?>
-			</div><!--/note-->
-		<?php endforeach; ?>
-		<?php endif; ?>
-
-		<div class="add-note">
-			<h3><?php echo __('Add note') ?></h3>
-			<form action="#" method="post">
-				<textarea rows="3" name="note"></textarea>
-				<input id="save-note" type="submit" value="<?php echo __('Save the note') ?>" name="save-note" />
-			</form>
-		</div>
-	</div><!--/notes-->
+			</div>
+		</div><!--/notes-->
+	<?php endif; ?>
 
 </div><!--/left-area-->
 

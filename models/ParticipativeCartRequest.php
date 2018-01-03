@@ -32,6 +32,7 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
     const DELETE_ITEMS_NOTES            = 'delete_items_notes';
     const DELETE_ITEMS_NOTES_COMMENTS   = 'delete_items_notes_comments';
 
+
     /**
      * In order to validate a request, ensure that a request a the user doesn't exists for the cart
      */
@@ -44,6 +45,7 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
         	 throw new Exception("This user has already sended a request for this cart");
         }
     }
+
 
     /**
      * Returns the "User" object for this request
@@ -83,5 +85,49 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
     }
 
 
+    /**
+     * Returns rights level of the request
+     *
+     * @return Integer The level
+     */
+    public function getRightsLevel()
+    {
+        if (!$this->rights) return;
+
+        $level[self::VIEW_ITEMS]                  = 1;
+        $level[self::VIEW_ITEMS_NOTES]            = 2;
+        $level[self::VIEW_ITEMS_NOTES_COMMENTS]   = 3;
+        $level[self::ADD_ITEMS_NOTES]             = 4;
+        $level[self::ADD_ITEMS_NOTES_COMMENTS]    = 5;
+        $level[self::DELETE_ITEMS_NOTES]          = 6;
+        $level[self::DELETE_ITEMS_NOTES_COMMENTS] = 7;
+        return $level[$this->rights];
+    }
+
+
+    /**
+     * Check if the user can see the notes
+     *
+     * @return Bolaean
+     */
+    public function userCanViewNotes() {
+
+        if($this->getRightsLevel() >= 2)
+            return true;
+        return false;
+    }
+
+
+    /**
+     * Check if the user can see the comment
+     *
+     * @return Bolaean
+     */
+    public function userCanViewComments() {
+
+        if($this->getRightsLevel() >= 3)
+            return true;
+        return false;
+    }
 }
 

@@ -33,7 +33,9 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 				<div class="note">
 					<strong><?php echo $note->note; ?></strong>
 					<span class="info">(<?php echo $note->getUser()->name ?>)</span>
-					<a class="reply-link" href="#"><?php echo __('Reply to note') ?></a>
+					<?php if($request->userCanAddCommentsToCart()): ?>
+						<a class="reply-link" href="#"><?php echo __('Reply to note') ?></a>
+					<?php endif; ?>
 					<form action="#" method="post">
 						<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
 						<textarea rows="3" name="comment"></textarea>
@@ -48,7 +50,9 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 								<div class="comment" style="margin-left:<?php echo (50*$comment->level) ?>px;">
 									<strong><?php echo $comment->comment; ?></strong>
 									<span class="info">(<?php echo $comment->getUser()->name ?> - <?php echo get_date($comment->inserted) ?>)</span>
-									<a class="reply-link" href="#"><?php echo __('Reply') ?></a>
+									<?php if($request->userCanAddCommentsToCart()): ?>
+										<a class="reply-link" href="#"><?php echo __('Reply') ?></a>
+									<?php endif; ?>
 									<form action="#" method="post">
 										<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
 										<input type="hidden" name="comment-id" value="<?php echo $comment->id ?>" />

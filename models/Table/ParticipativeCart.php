@@ -48,9 +48,10 @@ class Table_ParticipativeCart extends Omeka_Db_Table
      * Get the carts shared with current user
      *
      * @param Boolean $with_items whether or not retrieve items of the cart
+     * @param Boolean $only_editable retrieve only the carts where the user can add items
      * @return Array of ParticipativeCart objects
      */
-    public static function getSharedCarts($with_items = false) {
+    public static function getSharedCarts($with_items = false, $only_editable = false) {
 
         $user = current_user();
 
@@ -61,7 +62,11 @@ class Table_ParticipativeCart extends Omeka_Db_Table
 
         $carts = array();
         foreach ($cartsRequests as $request) {
-            $carts[] = $request->getCart();
+            if (!$only_editable) {
+                $carts[] = $request->getCart();
+            } elseif ($request->userCanAddItemToCart()) {
+                $carts[] = $request->getCart();
+            }
         }
 
         if (!$with_items)
@@ -72,7 +77,6 @@ class Table_ParticipativeCart extends Omeka_Db_Table
         }
         return $carts;
     }
-
 
 
     /**

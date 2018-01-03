@@ -208,7 +208,9 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
       $item = $args['item'];
 
       $participativeCartTable = get_db()->getTable('ParticipativeCart');
-      $carts = $participativeCartTable->getUserCarts();
+      $userCarts = $participativeCartTable->getUserCarts();
+      $sharedCarts = $participativeCartTable->getSharedCarts(null, 'only_editables');
+      $carts = array_merge($userCarts, $sharedCarts);
 
       foreach ($carts as $cart) {
         if ($cart->itemIsInCart($item->id)) {

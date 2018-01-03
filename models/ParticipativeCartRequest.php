@@ -129,5 +129,32 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
             return true;
         return false;
     }
+
+
+    /**
+     * Check if the user can add item to cart
+     *
+     * @return Bolaean
+     */
+    public function userCanAddItemToCart() {
+
+        if($this->getRightsLevel() >= 4)
+            return true;
+        return false;
+    }
+
+
+    /**
+     * Check if the user can add item to cart
+     *
+     * @return Bolaean
+     */
+    public function userCanAddCommentsToCart() {
+
+        if($this->getRightsLevel() >= 5)
+            return true;
+        return false;
+    }
+
 }
 

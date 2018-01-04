@@ -550,12 +550,16 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
             throw new Exception("Invalid comment");
         }
 
-        //$cartItem = $note->getCartItem();
+        // Check note
+        if (!($note = get_record_by_id("ParticipativeCartItemNote", $comment->cart_item_note_id))) {
+            throw new Exception("Invalid note");
+        }
 
-        //$note->delete();
+        $cartItem = $note->getCartItem();
 
-        //$this->_helper->redirector->gotoRoute(array('cart-id' => $cartItem->cart_id, 'item-id' => $cartItem->item_id), 'pc_view_item');
-        echo "oo";
+        $comment->delete();
+
+        $this->_helper->redirector->gotoRoute(array('cart-id' => $cartItem->cart_id, 'item-id' => $cartItem->item_id), 'pc_view_item');
     }
 
 }

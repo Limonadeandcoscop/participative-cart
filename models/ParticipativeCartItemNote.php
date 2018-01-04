@@ -58,9 +58,10 @@ class ParticipativeCartItemNote extends Omeka_Record_AbstractRecord
      /**
      * Get comments of the note sorted in a tree
      *
+     * @param Boolean $comment_id If provides returns all child of the comment
      * @return Array of ParticipativeCartItemComments objects
      */
-    public function getComments() {
+    public function getComments($comment_id = false) {
 
 		$params['cart_item_note_id']= $this->id;
         $params['sort_field']       = 'inserted';
@@ -71,16 +72,17 @@ class ParticipativeCartItemNote extends Omeka_Record_AbstractRecord
 
         $this->_comments = $comments;
 
-        $this->getChildComments();
+        $this->getChildComments($comment_id);
 
         return $this->_hierarchy;
     }
 
 
-     /**
+    /**
      * Recursive function witch build the comments tree
      * Fill the $_hierarchy variable
      *
+     * @param Boolean $comment_id If provides returns all child of the comment
      * @return void
      */
     private function getChildComments($comment_id = false) {

@@ -37,4 +37,21 @@ class ParticipativeCartItemComment extends Omeka_Record_AbstractRecord
             throw new Exception("Invalid user ID");
         return $user;
     }
+
+
+    /**
+     * Before delete a comment, deletes all childs
+     */
+    protected function beforeDelete() {
+
+        // Get and check note
+        if (!($note = get_record_by_id("ParticipativeCartItemNote", $this->cart_item_note_id))) {
+            throw new Exception("Invalid note");
+        }
+        $children = $note->getComments($this->id);
+
+        foreach($children as $child) {
+            $child->delete();
+        }
+    }
 }

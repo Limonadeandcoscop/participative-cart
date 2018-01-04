@@ -452,9 +452,11 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         }
 
         // Get request
-        $request = $cart->haveRequestFromUser();
-        if (!$request) {
-            throw new Exception("User is not allowed to access this cart");
+        if ($cart->user_id != current_user()->id) {
+            $request = $cart->haveRequestFromUser();
+            if (!$request) {
+                throw new Exception("User is not allowed to access this item");
+            }
         }
 
 
@@ -493,9 +495,67 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         $this->view->cart       = $cart;
         $this->view->item       = $item;
-        $this->view->request    = $request;
+        $this->view->request    = @$request;
         $this->view->notes      = $cartItem->getNotes();
+    }
 
+
+    /**
+     * Delete a note
+     *
+     * @param Integer $note-id The ID of the note
+     * @return JSON
+     */
+    public function deleteNoteAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Check params
+        if (!($note_id = $this->getParam('note-id'))) {
+            throw new Exception("Invalid note ID");
+        }
+
+        // Check note
+        if (!($note = get_record_by_id("ParticipativeCartItemNote", $note_id))) {
+            throw new Exception("Invalid note");
+        }
+
+        $cartItem = $note->getCartItem();
+
+        $note->delete();
+
+        $this->_helper->redirector->gotoRoute(array('cart-id' => $cartItem->cart_id, 'item-id' => $cartItem->item_id), 'pc_view_item');
+    }
+
+
+    /**
+     * Delete a comment
+     *
+     * @param Integer $comment-id The ID of the comment
+     * @return JSON
+     */
+    public function deleteCommentAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Check params
+        if (!($comment_id = $this->getParam('comment-id'))) {
+            throw new Exception("Invalid comment ID");
+        }
+
+        // Check comment
+        if (!($comment = get_record_by_id("ParticipativeCartItemComment", $comment_id))) {
+            throw new Exception("Invalid comment");
+        }
+
+        //$cartItem = $note->getCartItem();
+
+        //$note->delete();
+
+        //$this->_helper->redirector->gotoRoute(array('cart-id' => $cartItem->cart_id, 'item-id' => $cartItem->item_id), 'pc_view_item');
+        echo "oo";
     }
 
 }

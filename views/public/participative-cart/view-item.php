@@ -24,7 +24,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 	<h1><?php echo $title ?></h1>
 	<?php echo $this->partial('participative-cart/view-item-content.php', array('item' => $item)); ?>
 
-	<?php if ($request->userCanViewNotes()): ?>
+	<?php if (current_user()->id == $cart->user_id || $request->userCanViewNotes()): ?>
 		<div class="notes">
 			<h2><?php echo __('Notes') ?></h2>
 
@@ -33,9 +33,10 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 				<div class="note">
 					<strong><?php echo $note->note; ?></strong>
 					<span class="info">(<?php echo $note->getUser()->name ?>)</span>
-					<?php if($request->userCanAddCommentsToCart()): ?>
+					<?php if(current_user()->id == $cart->user_id || $request->userCanAddCommentsToCart()): ?>
 						<a class="reply-link" href="#"><?php echo __('Reply to note') ?></a>
 					<?php endif; ?>
+					<a class="delete-note-link"  data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('note-id' => $note->id), 'pc_delete_note'); ?>"><?php echo __('Delete note') ?></a>
 					<form action="#" method="post">
 						<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
 						<textarea rows="3" name="comment"></textarea>
@@ -43,16 +44,17 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 						<input class="cancel-reply" type="button" value="<?php echo __('Cancel') ?>" />
 					</form>
 
-					<?php if ($request->userCanViewComments()): ?>
+					<?php if (current_user()->id == $cart->user_id || $request->userCanViewComments()): ?>
 						<?php if (count($note->comments)): ?>
 							<div class="comments">
 							<?php foreach ($note->comments as $comment): ?>
 								<div class="comment" style="margin-left:<?php echo (50*$comment->level) ?>px;">
 									<strong><?php echo $comment->comment; ?></strong>
 									<span class="info">(<?php echo $comment->getUser()->name ?> - <?php echo get_date($comment->inserted) ?>)</span>
-									<?php if($request->userCanAddCommentsToCart()): ?>
+									<?php if(current_user()->id == $cart->user_id || $request->userCanAddCommentsToCart()): ?>
 										<a class="reply-link" href="#"><?php echo __('Reply') ?></a>
 									<?php endif; ?>
+									<a class="delete-comment-link"  data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('comment-id' => $comment->id), 'pc_delete_comment'); ?>"><?php echo __('Delete') ?></a>
 									<form action="#" method="post">
 										<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
 										<input type="hidden" name="comment-id" value="<?php echo $comment->id ?>" />
@@ -99,21 +101,23 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 
 <?php echo foot(); ?>
 
+<?php
+    // Call confirmation modal
+    echo $this->partial('participative-cart/modal-confirmation.php', array('message' => ''));
+?>
+
 
 <script>
 jQuery(document).ready(function($) {
 
 	$('.cart.item .reply-link').click(function() {
-
-		var form  		= $(this).next('form');
+		var form  		= $(this).nextAll('form');
 		var cancel 		= form.find('.cancel-reply');
 		var textarea 	= form.find('textarea');
-
 		cancel.click(function() {form.hide()});
 		textarea.val('');
 		form.toggle();
 		return false;
-
 	});
 });
 </script>

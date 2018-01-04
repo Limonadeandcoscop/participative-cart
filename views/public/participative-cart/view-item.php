@@ -32,11 +32,13 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 			<?php foreach ($notes as $note): ?>
 				<div class="note">
 					<strong><?php echo $note->note; ?></strong>
-					<span class="info">(<?php echo $note->getUser()->name ?>)</span>
+					<span class="info">(<?php echo $note->getUser()->name ?> - <?php echo get_date($note->inserted) ?>)</span>
 					<?php if(current_user()->id == $cart->user_id || $request->userCanAddCommentsToCart()): ?>
 						<a class="reply-link" href="#"><?php echo __('Reply to note') ?></a>
 					<?php endif; ?>
-					<a class="delete-note-link"  data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('note-id' => $note->id), 'pc_delete_note'); ?>"><?php echo __('Delete note') ?></a>
+					<?php if(current_user()->id == $note->user_id || (isset($request) && $request->userCanDeleteItemOrNote())): ?>
+						<a class="delete-note-link"  data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('note-id' => $note->id), 'pc_delete_note'); ?>"><?php echo __('Delete note') ?></a>
+					<?php endif; ?>
 					<form action="#" method="post">
 						<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
 						<textarea rows="3" name="comment"></textarea>
@@ -54,7 +56,9 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 									<?php if(current_user()->id == $cart->user_id || $request->userCanAddCommentsToCart()): ?>
 										<a class="reply-link" href="#"><?php echo __('Reply') ?></a>
 									<?php endif; ?>
-									<a class="delete-comment-link"  data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('comment-id' => $comment->id), 'pc_delete_comment'); ?>"><?php echo __('Delete') ?></a>
+									<?php if(current_user()->id == $comment->user_id || (isset($request) && $request->userCanDeleteComment())): ?>
+										<a class="delete-comment-link"  data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('comment-id' => $comment->id), 'pc_delete_comment'); ?>"><?php echo __('Delete') ?></a>
+									<?php endif; ?>
 									<form action="#" method="post">
 										<input type="hidden" name="note-id" value="<?php echo $note->id ?>" />
 										<input type="hidden" name="comment-id" value="<?php echo $comment->id ?>" />

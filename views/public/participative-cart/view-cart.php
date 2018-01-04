@@ -12,9 +12,11 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 	</h1>
 	<div class="buttons">
 		<a class="back button" href="<?php echo url('cart') ?>"><?php echo __('Back to your carts') ?></a>
-		<a class="edit button" href="<?php echo url(array('cart-id' => $cart->id), 'pc_edit_cart'); ?>"><?php echo __('Edit cart') ?></a>
-		<a class="delete button" data-toggle="modal" data-target="#modal-confirmation" data-message="<?php echo __('Are you sure you want to delete this cart and all its items and comments ?') ?>" href="<?php echo url(array('cart-id' => $cart->id), 'pc_delete_cart'); ?>"><?php echo __('Delete cart') ?></a>
-		<a class="members button disable"><?php echo __('Members') ?></a>
+		<?php if ($cart->user_id == current_user()->id): ?>
+			<a class="edit button" href="<?php echo url(array('cart-id' => $cart->id), 'pc_edit_cart'); ?>"><?php echo __('Edit cart') ?></a>
+			<a class="delete button" data-toggle="modal" data-target="#modal-confirmation" data-message="<?php echo __('Are you sure you want to delete this cart and all its items and comments ?') ?>" href="<?php echo url(array('cart-id' => $cart->id), 'pc_delete_cart'); ?>"><?php echo __('Delete cart') ?></a>
+			<a class="members button" href="<?php echo url(array('cart-id' => $cart->id), 'pc_members'); ?>"><?php echo __('Members') ?></a>
+		<?php endif; ?>
 	</div>
 </div>
 
@@ -46,10 +48,14 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 	<?php foreach ($items_in_cart as $item_in_cart): ?>
 		<?php $item = get_record_by_id('Item', $item_in_cart->item_id) ?>
 		<div class="item">
+			<?php $request = $cart->haveRequestFromUser(); ?>
 			<div class="title"><a href="<?php echo url(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_view_item'); ?>"><?php echo $item->getProperty('display_title') ?></a></div>
+			<div class="infos"><?php echo __('Added by') ?> : <?php echo $item_in_cart->getUser()->name ?> <?php echo __('on') ?> <?php echo get_date($item_in_cart->inserted) ?></div>
 			<div class="identifier"><strong><?php echo __('Identifier') ?></strong> : <?php echo metadata($item, array('Dublin Core', 'Identifier')) ?></div>
+			<?php if ($cart->user_id == current_user()->id || $request->userCanRemoveItemOrNote()): ?>
 			<a class="remove" data-toggle="modal" data-target="#modal-confirmation" data-message="<?php echo __('Are you sure you want to remove this item from the cart and delete all its comments and notes ?') ?>" href="<?php echo url(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_delete_item_from_cart'); ?>"><?php echo __('Remove from cart') ?></a>
 			&nbsp;|&nbsp;
+			<?php endif; ?>
 			<a class="print" href="<?php echo url(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_print_item_from_cart'); ?>"><?php echo __('Print item') ?></a>
 			&nbsp;|&nbsp;
 			<a class="download" href="<?php echo url(array('cart-id' => $cart->id, 'item-id' => $item->id), 'pc_print_item_from_cart'); ?>"><?php echo __('Download item') ?></a>

@@ -76,6 +76,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
           `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `cart_id` int(10) unsigned NOT NULL,
           `item_id` int(3) unsigned NOT NULL,
+          `user_id` int(3) unsigned NOT NULL,
           `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
           UNIQUE KEY `id` (`id`)

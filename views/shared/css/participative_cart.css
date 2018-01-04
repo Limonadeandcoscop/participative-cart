@@ -156,6 +156,11 @@
   line-height:22px;
 }
 
+.cart.view .item .infos {
+  font-size:12px;
+  margin:10px 0 0;
+}
+
 .cart.view .item .identifier {
   font-size:12px;
   margin:5px 0;

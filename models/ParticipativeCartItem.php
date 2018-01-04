@@ -18,6 +18,7 @@ class ParticipativeCartItem extends Omeka_Record_AbstractRecord
 {
     public $cart_id;
     public $item_id;
+    public $user_id;
     public $inserted;
 
     /**
@@ -49,6 +50,34 @@ class ParticipativeCartItem extends Omeka_Record_AbstractRecord
             }
         }
         return $notes;
+    }
+
+
+    /**
+     * Returns the "Cart" object for this item
+     *
+     * @return Cart object
+     */
+    public function getCart() {
+
+        $cart = get_record_by_id('ParticipativeCart', $this->cart_id);
+        if (get_class($cart) != 'ParticipativeCart')
+            throw new Exception("Invalid cart");
+        return $cart;
+    }
+
+
+    /**
+     * Returns the "User" object for this item (the user witch added the item in the cart)
+     *
+     * @return User object
+     */
+    public function getUser() {
+
+        $user = get_record_by_id('User', $this->user_id);
+        if (get_class($user) != 'User')
+            throw new Exception("Invalid user");
+        return $user;
     }
 
 

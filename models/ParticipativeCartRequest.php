@@ -108,7 +108,7 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
     /**
      * Check if the user can see the notes
      *
-     * @return Bolaean
+     * @return Boolean
      */
     public function userCanViewNotes() {
 
@@ -121,7 +121,7 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
     /**
      * Check if the user can see the comment
      *
-     * @return Bolaean
+     * @return Boolean
      */
     public function userCanViewComments() {
 
@@ -134,7 +134,7 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
     /**
      * Check if the user can add item to cart
      *
-     * @return Bolaean
+     * @return Boolean
      */
     public function userCanAddItemToCart() {
 
@@ -147,7 +147,7 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
     /**
      * Check if the user can add item to cart
      *
-     * @return Bolaean
+     * @return Boolean
      */
     public function userCanAddCommentsToCart() {
 
@@ -156,5 +156,30 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
         return false;
     }
 
+
+    /**
+     * Check if the user can delete item and notes
+     *
+     * @return Boolean
+     */
+    public function userCanDeleteItemOrNote() {
+
+        if($this->getRightsLevel() >= 6)
+            return true;
+        return false;
+    }
+
+
+    /**
+     * Check if the user can delete comments
+     *
+     * @return Boolean
+     */
+    public function userCanDeleteComment() {
+
+        if($this->getRightsLevel() >= 7)
+            return true;
+        return false;
+    }
 }
 

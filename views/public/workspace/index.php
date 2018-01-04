@@ -97,7 +97,7 @@ echo head(array('title' => $title, 'bodyclass' => 'workspace'));
     <?php echo pagination_links(); ?>
 </div>
 <?php else: ?>
-    <p class="no-carts"><?php echo __("You don't have any cart in your workspace"); ?></p>
+    <p class="no-carts"><?php echo __("There's no cart in the workspace"); ?></p>
 <?php endif; ?>
 
 

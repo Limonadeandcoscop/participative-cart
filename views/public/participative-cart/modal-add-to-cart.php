@@ -14,7 +14,12 @@
             <select name="cart_id" required data-msg="<?php echo __("You must choose a cart") ?>" >
               <option value=""><?php echo __("Choose a cart"); ?></option>
               <?php foreach($carts as $cart): ?>
-                <option <?php if ($cart['contain_item']) echo "disabled" ?> value="<?php echo $cart['id']; ?>" url="<?php echo url(array('item-id' => $item_id, 'cart-id' => $cart['id']), 'pc_add_item_to_cart'); ?>"><?php echo $cart['name']; ?></option>
+                <option <?php if ($cart['contain_item']) echo "disabled" ?> value="<?php echo $cart['id']; ?>" url="<?php echo url(array('item-id' => $item_id, 'cart-id' => $cart['id']), 'pc_add_item_to_cart'); ?>">
+                  <?php echo $cart['name']; ?>
+                  <?php if ($cart['user_id'] != current_user()->id): ?>
+                  &nbsp;- <?php echo $cart->getUser()->name; ?>
+                  <?php endif; ?>
+                </option>
               <?php endforeach; ?>
             </select>
             <input type="submit" class="add" value="<?php echo __('Add to cart') ?>" />

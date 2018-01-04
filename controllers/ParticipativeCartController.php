@@ -323,6 +323,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $cartItem = new ParticipativeCartItem();
         $cartItem->item_id = $item_id;
         $cartItem->cart_id = $cart_id;
+        $cartItem->user_id = current_user()->id;
         $cartItem->save();
 
         $json['status']  = 'ok';

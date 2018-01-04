@@ -3,6 +3,21 @@ $title = '"'.$item->getProperty('display_title').'"'.__(" in cart ") . $cart->qu
 echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 ?>
 
+
+<div class="title area">
+	<h1>
+		<?php echo $title ?>
+		<?php if ($count>0): ?>
+			- <?php echo $count; ?> item<?php echo $s ?>
+		<?php endif; ?>
+		<div class="owner"><?php echo __('Owner') ?> : <?php echo $cart->getUser()->name ?></div>
+	</h1>
+	<div class="buttons">
+		<a class="back button" href="<?php echo url(array('cart-id' => $cart->id), 'pc_view_cart'); ?>"><?php echo __('Back to cart') ?></a>
+	</div>
+</div>
+
+
 <?php if ($description = $cart->description): ?>
 	<div class="group description">
 		<?php echo $description ?>
@@ -16,7 +31,6 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 		<input class="button disable" type="submit" value="<?php echo __('Search') ?>" />
 	</div>
 </div><!--/top-area-->
-
 
 
 <div class="left area">
@@ -36,7 +50,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 					<?php if(current_user()->id == $cart->user_id || $request->userCanAddCommentsToCart()): ?>
 						<a class="reply-link" href="#"><?php echo __('Reply to note') ?></a>
 					<?php endif; ?>
-					<?php if(current_user()->id == $note->user_id || (isset($request) && $request->userCanDeleteItemOrNote())): ?>
+					<?php if(current_user()->id == $cart->user_id || current_user()->id == $note->user_id || (isset($request) && $request->userCanDeleteItemOrNote())): ?>
 						<a class="delete-note-link"  data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('note-id' => $note->id), 'pc_delete_note'); ?>"><?php echo __('Delete note') ?></a>
 					<?php endif; ?>
 					<form action="#" method="post">

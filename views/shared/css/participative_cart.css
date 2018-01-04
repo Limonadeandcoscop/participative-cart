@@ -170,7 +170,8 @@
   color:black;
 }
 
-.cart.view .search {
+.cart.view .search,
+.cart.item .search {
   float:right;
 }
 

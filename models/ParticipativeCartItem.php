@@ -22,9 +22,13 @@ class ParticipativeCartItem extends Omeka_Record_AbstractRecord
     public $inserted;
 
     /**
-     * @todo Delete notes and comments
+     * @todo Before delete an item, delete notes and comments
      */
 	protected function beforeDelete() {
+        $notes = $this->getNotes();
+        foreach ($notes as $note) {
+            $note->delete();
+        }
 	}
 
 

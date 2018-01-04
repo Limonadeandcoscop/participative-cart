@@ -498,6 +498,8 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $this->view->item       = $item;
         $this->view->request    = @$request;
         $this->view->notes      = $cartItem->getNotes();
+        $this->view->count      = count($cart->getItems());
+        $this->view->s          = $this->view->count>1 ? 's' : '';
     }
 
 

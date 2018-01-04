@@ -371,4 +371,57 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
 
         return false;
     }
+
+
+    /**
+     * Get number of items in this cart
+     *
+     * @return Integer The number of notes
+     */
+    public function getNbItems() {
+
+        return count($this->getItems(false));
+    }
+
+
+    /**
+     * Get number of notes in this cart
+     *
+     * @return Integer The number of notes
+     */
+    public function getNbNotes() {
+
+        $nb = 0;
+        foreach ($this->getItems(false) as $cartItem) {
+            foreach ($cartItem->getNotes() as $note) {
+                $nb++;
+            }
+        }
+        return $nb;
+    }
+
+
+    /**
+     * Get number of notes in this cart
+     *
+     * @return Integer The number of notes
+     */
+    public function getNbComments() {
+
+        $res = array();
+        foreach ($this->getItems(false) as $cartItem) {
+            $notes = $cartItem->getNotes();
+            if(count($notes)) {
+                foreach ($notes as $note) {
+                    $comments = $note->getComments();
+                    if(count($comments)) {
+                        foreach($comments as $comment) {
+                            $res[] = $comment->id;
+                        }
+                    }
+                }
+            }
+        }
+        return count(array_unique($res));
+    }
 }

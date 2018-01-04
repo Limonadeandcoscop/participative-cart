@@ -66,6 +66,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
 
         // Retrieve informations for facets
         foreach($carts as $key => $cart) {
+
             // Users facet
             $user = $cart->getUser();
             $refinements['users'][$user->id]['name'] = $user->name;
@@ -80,7 +81,6 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
                 }
             }
         }
-
 
         // It's the first call, there's no refinements, store the URL in session
         if (!$this->getParam('refine')) {

@@ -90,8 +90,9 @@ echo head(array('title' => $title, 'bodyclass' => 'workspace'));
                     <p class="notice" style="font-style:italic;float:right"><?php echo __('You must be logged in for send a request') ?><a href="<?php echo url('guest-user/user/login') ?>"> <?php echo __('Login'); ?></a></p>
                 <?php endif; ?>
             </div>
-            <div class="nb-items"><strong><?php echo __('Notes') ?></strong> : 0</div>
-            <div class="nb-notes"><strong><?php echo __('Items') ?></strong> : <?php echo count($cart->getItems(false)); ?></div>
+            <div class="nb-notes"><strong><?php echo __('Items') ?></strong> : <?php echo $c->getNbItems(); ?></div>
+            <div class="nb-items"><strong><?php echo __('Notes') ?></strong> : <?php echo $c->getNbNotes(); ?></div>
+            <div class="nb-comments"><strong><?php echo __('Comments') ?></strong> : <?php echo $c->getNbComments(); ?></div>
 		</div>
 	<?php endforeach; ?>
     <?php echo pagination_links(); ?>

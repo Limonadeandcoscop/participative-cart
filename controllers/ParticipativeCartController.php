@@ -187,11 +187,12 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         if ($this->getRequest()->isPost()) {
 
+
             if (!($name = $this->getParam('name'))) {
                 throw new Exception("The name of the cart is required");
             }
 
-            $status = ($this->getParam('status') == ParticipativeCart::CART_STATUS_PRIVATE) ? ParticipativeCart::CART_STATUS_PRIVATE : ParticipativeCart::CART_STATUS_PUBLIC;
+           $status = (!$this->getParam('status') || $this->getParam('status') == ParticipativeCart::CART_STATUS_PRIVATE) ? ParticipativeCart::CART_STATUS_PRIVATE : ParticipativeCart::CART_STATUS_PUBLIC;
 
             $cart->name         = $name;
             $cart->description  = $this->getParam('description');

@@ -39,7 +39,7 @@ echo head(array('title' => $title, 'bodyclass' => 'carts view'));
 
 
 	<?php if (count($sharedCarts)): ?>
-		<h3><?php echo __('Shared carts') ?></h3>
+		<h3><?php echo __('Carts shared with you') ?></h3>
 		<?php foreach($sharedCarts as $cart): ?>
 		<div class="cart">
 			<?php $c = count($cart->items) ?>

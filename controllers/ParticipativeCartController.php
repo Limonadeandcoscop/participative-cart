@@ -66,6 +66,12 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         if (!$tags) $tags = array();
         $this->view->tags = $tags;
 
+        // Retrieve number of requests of public carts
+        foreach ($userCartsPublic as $key => $cart) {
+            $cart->nb_waiting_requests  = count($cart->getWaitingRequests());
+            $cart->nb_accepted_requests = count($cart->getAcceptedRequests());
+        }
+
         $this->view->userCartsPrivate   = $userCartsPrivate;
         $this->view->userCartsPublic    = $userCartsPublic;
         $this->view->sharedCarts        = $sharedCarts;

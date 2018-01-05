@@ -29,6 +29,9 @@ echo head(array('title' => $title, 'bodyclass' => 'carts view'));
 		<div class="cart">
 			<?php $c = count($cart->items) ?>
 			<strong><?php echo $cart->name; ?></strong>
+			<div class="nb_requests">
+				<?php echo __('Waiting requests') ?> : <?php echo $cart->nb_waiting_requests ?> | <?php echo __('Members') ?> : <?php echo $cart->nb_accepted_requests ?>
+			</div>
 			<a class="view" href="<?php echo url(array('cart-id' => $cart->id), 'pc_view_cart'); ?>"><?php echo __('View cart') ?> (<?php echo $c ?> item<?php echo ($c>1)?'s':'' ?>)</a>
 		</div>
 		<?php endforeach; ?>

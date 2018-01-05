@@ -58,7 +58,10 @@ echo head(array('title' => $title, 'bodyclass' => 'members'));
 
     <?php foreach ($acceptedRequests as $request): ?>
         <?php $user = $request->getUser(); ?>
-        <?php $selected[$request->rights] = 'selected'; ?>
+        <?php
+            $selected = array();
+            $selected[$request->rights] = 'selected';
+        ?>
         <div class="request accepted">
             <div class="user">
                 <div class="name"><?php echo $user->name; ?></div>

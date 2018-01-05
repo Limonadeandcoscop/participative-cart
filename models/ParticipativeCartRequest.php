@@ -181,5 +181,43 @@ class ParticipativeCartRequest extends Omeka_Record_AbstractRecord
             return true;
         return false;
     }
+
+
+    /**
+     * Check if the request is cancelable
+     * A request is cancelable if :
+     *  - The requester hasn't publish item in the cart
+     *  - The requester hasn't add a note on an item of the cart
+     *  - The requester hasn't add a comment on a note of the cart
+     *
+     * @return Boolean
+     */
+    public function isCancelable() {
+
+        // Check if the requester has already publish items in this cart
+        $items = get_db()->getTable('ParticipativeCartItem')->findBy(array('user_id' => $this->user_id, 'cart_id' => $this->cart_id));
+        if (count($items)) return false;
+
+        // Check if the requester has already post a note in this cart
+        $cartItems = $this->getCart()->getItems(false);
+        foreach ($cartItems as $cartItem) {
+            $notes = $cartItem->getNotes();
+            foreach ($notes as $note) {
+                if ($note->user_id == $this->user_id)
+                    return false;
+
+                // Check if the requester has already post a comment in this cart
+                $comments = $note->getComments();
+                if (count($comments)) {
+                    foreach($comments as $comment) {
+                        if ($comment->user_id == $this->user_id)
+                            return false;
+                    }
+                }
+            }
+
+        }
+        return true;
+    }
 }
 

@@ -48,7 +48,6 @@ class ParticipativeCartItem extends Omeka_Record_AbstractRecord
 
         if (count($notes)) {
 
-            $table = get_db()->getTable('ParticipativeCartItemComment');
             foreach($notes as $note) {
                 $note->comments = $note->getComments();
             }
@@ -98,6 +97,5 @@ class ParticipativeCartItem extends Omeka_Record_AbstractRecord
 
         return end($notes)->order + 1;
     }
-
 
 }

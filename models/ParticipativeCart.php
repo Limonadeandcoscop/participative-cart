@@ -30,8 +30,9 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
     const CART_STATUS_PUBLIC    = 'public';
 
     // Status constants for a request
-    const REQUEST_STATUS_WAITING   = 'waiting';
-    const REQUEST_STATUS_ACCEPTED  = 'accepted';
+    const REQUEST_STATUS_WAITING    = 'waiting';
+    const REQUEST_STATUS_ACCEPTED   = 'accepted';
+    const REQUEST_STATUS_SUSPENDED  = 'suspended';
 
 
     /**
@@ -94,6 +95,7 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         return $items;
     }
 
+
     /**
      * Check if an item is in the current cart
      * If the item is in the cart, returns the ParticipativeCart object
@@ -149,6 +151,7 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
 
         if ($results) return true;
     }
+
 
     /**
      * Quote a cart value, for example returns '&quot;My Cart&quot;' for 'My Cart'
@@ -300,15 +303,43 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
      * Check if a user has always send a request for this cart
      *
      * @param String $user_id The user ID (optional : if not provided get current user)
+     * @param String $exclude_suspended If provides, exclude the "suspended" requests from results
      * @return Boolean|ParticipativeCartRequest The ParticipativeCartRequest otherwise false
      */
-    public function haveRequestFromUser($user_id = null) {
+    public function haveRequestFromUser($user_id = null, $exclude_suspended = false) {
 
         if (!$user_id) $user_id = current_user()->id;
         $table      = get_db()->getTable('ParticipativeCartRequest');
-        $results    = $table->findBy(array('cart_id' => $this->id, 'user_id' => $user_id));
+
+        $params['cart_id'] = $this->id;
+        $params['user_id'] = $user_id;
+
+        if ($exclude_suspended)
+            $params['status'] = array(self::REQUEST_STATUS_WAITING, self::REQUEST_STATUS_WAITING);
+
+        $results    = $table->findBy($params);
         return @$results[0];
     }
+
+
+    /**
+     * Check if a user has a suspended request for this cart
+     *
+     * @param String $user_id The user ID (optional : if not provided get current user)
+     * @return Boolean|ParticipativeCartRequest The ParticipativeCartRequest otherwise false
+     */
+    public function haveSuspendedRequestFromUser($user_id = null, $exclude_suspended = false) {
+
+        if (!$user_id) $user_id = current_user()->id;
+        $table      = get_db()->getTable('ParticipativeCartRequest');
+
+        $params['cart_id'] = $this->id;
+        $params['user_id'] = $user_id;
+        $params['status'] = self::REQUEST_STATUS_SUSPENDED;
+        $results    = $table->findBy($params);
+        return @$results[0];
+    }
+
 
 
     /**
@@ -349,6 +380,17 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
     public function getAcceptedRequests()
     {
         return $this->getRequests(ParticipativeCart::REQUEST_STATUS_ACCEPTED);
+    }
+
+
+    /**
+     * Returns suspended cart requests
+     *
+     * @return Array of ParticipativeCartRequest
+     */
+    public function getSuspendedRequests()
+    {
+        return $this->getRequests(ParticipativeCart::REQUEST_STATUS_SUSPENDED);
     }
 
 
@@ -424,4 +466,6 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
         }
         return count(array_unique($res));
     }
+
+
 }

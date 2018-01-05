@@ -106,7 +106,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         // Disable view rendering
         $this->_helper->viewRenderer->setNoRender(true);
 
-        if (!$this->_request->isXmlHttpRequest()) return;
+        //if (!$this->_request->isXmlHttpRequest()) return;
 
         if (!($cart_id = $this->getParam('cart-id'))) {
             throw new Exception("Invalid cart ID");
@@ -121,18 +121,24 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         }
 
         if ($user->id == $cart->user_id) {
-            throw new Exception("A user can't send a request to on of these cart");
+            throw new Exception("A user can't send a request to on of its own cart");
         }
 
         if (!($cartUser = get_record_by_id("User", $cart->user_id))) {
             throw new Exception("Invalid cart user");
         }
 
-        $cartRequest = new ParticipativeCartRequest();
-        $cartRequest->cart_id   = $cart_id;
-        $cartRequest->user_id   = $user->id;
-        $cartRequest->status    = ParticipativeCart::REQUEST_STATUS_WAITING;
-        $cartRequest->save();
+        if ($cartRequest = $cart->haveSuspendedRequestFromUser()) {
+            $cartRequest->status = ParticipativeCart::REQUEST_STATUS_WAITING;
+            $cartRequest->save();
+        } else {
+            $cartRequest = new ParticipativeCartRequest();
+            $cartRequest->cart_id   = $cart_id;
+            $cartRequest->user_id   = $user->id;
+            $cartRequest->status    = ParticipativeCart::REQUEST_STATUS_WAITING;
+            $cartRequest->save();
+        }
+
 
         $url = absolute_url(array('cart-id' => $cart->id), 'pc_view_cart');
 
@@ -184,6 +190,31 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
 
 
     /**
+     * Suspend a request
+     *
+     * @return void
+     */
+    public function suspendRequestAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        if (!($request_id = $this->getParam('request-id'))) {
+            throw new Exception("Invalid request ID");
+        }
+
+        if (!($request = get_record_by_id("ParticipativeCartRequest", $request_id))) {
+            throw new Exception("Invalid request");
+        }
+
+        $request->status    = ParticipativeCart::REQUEST_STATUS_SUSPENDED;
+        $request->save();
+
+        $this->_helper->redirector->gotoRoute(array('cart-id' => $request->cart_id), 'pc_members');
+    }
+
+
+    /**
      * Manage request and rights
      */
     public function membersAction() {
@@ -219,9 +250,14 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
             }
         }
 
+        // Check accepted requests without items
+        $acceptedRequests = $cart->getAcceptedRequests();
+        $table = $this->_helper->db->getTable('ParticipativeCart');
+
         $this->view->cart               = $cart;
         $this->view->waitingRequests    = $cart->getWaitingRequests();
-        $this->view->acceptedRequests   = $cart->getAcceptedRequests();
+        $this->view->acceptedRequests   = $acceptedRequests;
+        $this->view->suspendedRequests  = $cart->getSuspendedRequests();
     }
 
 }

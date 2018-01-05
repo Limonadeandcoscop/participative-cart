@@ -78,7 +78,7 @@ echo head(array('title' => $title, 'bodyclass' => 'workspace'));
                 <?php if ($user = current_user()): // User is logged in ?>
                     <?php if ($user->id != $cart->user_id): // If the user isn't the cart owner ?>
                         <?php if ($cart->userCanWiewCart()): ?>
-                        <?php elseif ($request = $cart->haveRequestFromUser()): ?>
+                        <?php elseif ($request = $cart->haveRequestFromUser(null, 'exclude_suspended')): ?>
                             <a href="#" class="button waiting"><?php echo __('Request sent') ?></a>
                         <?php else: ?>
                             <a href="<?php echo url(array('cart-id' => $cart['id']), 'pc_send_request') ?>" class="button send-request"><?php echo __('Send request') ?></a>

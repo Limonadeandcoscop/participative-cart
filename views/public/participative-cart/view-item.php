@@ -41,7 +41,6 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 	<?php if (current_user()->id == $cart->user_id || $request->userCanViewNotes()): ?>
 		<div class="notes">
 			<h2><?php echo __('Notes') ?></h2>
-
 			<?php if (count($notes)): ?>
 			<?php foreach ($notes as $note): ?>
 				<div class="note">
@@ -86,11 +85,11 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 							</div><!--/comment-->
 						<?php endif; ?>
 					<?php endif; ?>
-
 				</div><!--/note-->
 			<?php endforeach; ?>
 			<?php endif; ?>
 
+			<?php if (current_user()->id == $cart->user_id || $request->userCanAddItemToCart()): ?>
 			<div class="add-note">
 				<h3><?php echo __('Add note') ?></h3>
 				<form action="#" method="post">
@@ -98,6 +97,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart item'));
 					<input id="save-note" type="submit" value="<?php echo __('Save the note') ?>" name="save-note" />
 				</form>
 			</div>
+			<?php endif; ?>
 		</div><!--/notes-->
 	<?php endif; ?>
 

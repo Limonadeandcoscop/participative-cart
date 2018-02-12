@@ -572,41 +572,5 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $this->_helper->redirector->gotoRoute(array('cart-id' => $cartItem->cart_id, 'item-id' => $cartItem->item_id), 'pc_view_item');
     }
 
-    /**
-     * Modal add cart
-     * 
-     * @return HTML
-     */
-    public function modalCreateCartAction() {
-        $this->view->tags = $this->_tableCartTag->findAll();
-    }
-
-    /**
-     * Modal add cart confirmation
-     * 
-     * @return HTML
-     */
-    public function modalCreateCartConfirmationAction() {
-
-    }
-
-    /**
-     * Modal delete cart
-     * 
-     * @return HTML
-     */
-    public function modalDeleteCartAction() {
-        $this->view->cart_id =  $this->getParam('cart-id');
-    }
-
-    /**
-     * Modal delete cart confirmation
-     * 
-     * @return HTML
-     */
-    public function modalDeleteCartConfirmationAction() {
-
-    }
-
 }
 

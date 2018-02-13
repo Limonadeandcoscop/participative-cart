@@ -260,14 +260,5 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         $this->view->suspendedRequests  = $cart->getSuspendedRequests();
     }
 
-    /**
-     * Modal request confirmation
-     * 
-     * @return HTML
-     */
-    public function modalRequestConfirmationAction() {
-
-    }
-
 }
 

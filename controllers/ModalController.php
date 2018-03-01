@@ -141,6 +141,26 @@ class ParticipativeCart_ModalController extends Omeka_Controller_AbstractActionC
     }
 
     /**
+     * Modal delete comment
+     * 
+     * @param Integer $comment-id The ID of the cart
+     * @return HTML
+     */
+    public function deleteCommentAction() {
+        $this->view->comment_id = $this->getParam('comment-id');
+    }
+
+    /**
+     * Modal delete note
+     * 
+     * @param Integer $note-id The ID of the cart
+     * @return HTML
+     */
+    public function deleteNoteAction() {
+        $this->view->note_id = $this->getParam('note-id');
+    }
+
+    /**
      * Modal empty cart
      * 
      * @return HTML

@@ -161,6 +161,16 @@ class ParticipativeCart_ModalController extends Omeka_Controller_AbstractActionC
     }
 
     /**
+     * Modal delete request
+     * 
+     * @param Integer $request-id The ID of the request
+     * @return HTML
+     */
+    public function deleteRequestAction() {
+        $this->view->request_id = $this->getParam('request-id');
+    }
+
+    /**
      * Modal empty cart
      * 
      * @return HTML
@@ -186,6 +196,16 @@ class ParticipativeCart_ModalController extends Omeka_Controller_AbstractActionC
      */
     public function requestConfirmationAction() {
 
+    }
+
+    /**
+     * Modal suspend request
+     * 
+     * @param Integer $request-id The ID of the request
+     * @return HTML
+     */
+    public function suspendRequestAction() {
+        $this->view->request_id = $this->getParam('request-id');
     }
 
 }

@@ -110,9 +110,10 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $this->_helper->db->setDefaultModelName('ParticipativeCartItem');
         $pluralName = $this->view->pluralize($this->_helper->db->getDefaultModelName());
         $params['cart_id'] = $cart->id;
-        $recordsPerPage = 2;
+        $recordsPerPage = 10;
         $currentPage    = $this->getParam('page', 1);
         $items_in_cart  = $this->_helper->db->findBy($params, $recordsPerPage, $currentPage);
+
         $totalRecords   = $this->_helper->db->count($params);
 
         if ($recordsPerPage) {
@@ -570,6 +571,42 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $comment->delete();
 
         $this->_helper->redirector->gotoRoute(array('cart-id' => $cartItem->cart_id, 'item-id' => $cartItem->item_id), 'pc_view_item');
+    }
+
+
+    /**
+     * Retrieve the contributions by users
+     *
+     * @return Array An multidimentionnal array with users ID as key and Cart Item IDs has values
+     */
+    public function contributorsAction() {
+
+        $users = $this->_helper->db->getTable('User')->findAll();
+        $tableNotes = $this->_helper->db->getTable('ParticipativeCartItemNote');
+        $tableComments = $this->_helper->db->getTable('ParticipativeCartItemComment');
+        $tableGuestUsers = $this->_helper->db->getTable('GuestUserInfo');
+
+        foreach ($users as $user) {
+
+            // Retrieve notes
+            $notes = $tableNotes->findBy(array('user_id' => $user->id));
+            foreach($notes as $note) {
+                $contributions[$user->id][] = $note->getCartItem()->id;    
+            }
+
+            // Retrieve comments
+            $comments = $tableComments->findBy(array('user_id' => $user->id));
+            foreach($comments as $comment) {
+                $note = get_record_by_id("ParticipativeCartItemNote", $comment->cart_item_note_id);
+                $contributions[$user->id][] = $note->getCartItem()->id;    
+            }   
+
+            // Remove doublons     
+            if (isset($contributions[$user->id]) && is_array($contributions[$user->id]))
+                $contributions[$user->id] = array_unique($contributions[$user->id]);
+        }
+
+        $this->view->contributions = $contributions;
     }
 
 }

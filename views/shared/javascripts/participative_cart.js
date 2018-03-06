@@ -73,13 +73,33 @@ function updateQueryStringParameter(key, value) {
 
     var delimiter = '%2C';
     var tab = pattern.split(delimiter);
+
     console.log("Tab : " + tab);
+
     var rank = tab.indexOf(value);
+    console.log("Rank :" + rank)
     if (rank >= 0) {
         tab.splice(rank, 1);
     } else {
         tab.push(value);
     }
+
+/*
+    var uniqueTab = [];
+    tab.forEach(function(element) {
+      console.log(element + ' ' + uniqueTab.indexOf(element));
+      if (uniqueTab.indexOf(element.toString()) == -1) {
+        uniqueTab.push(element);
+      }
+      console.log(uniqueTab);
+    });
+*/
+
+    // console.log("UniqueTabk : " + uniqueTab);
+    //tab = uniqueTab;
+
+    console.log("Tab : " + tab);
+
     result = tab.join(delimiter);
     console.log("Result : " + result);
     if (result.charAt(0) == delimiter)

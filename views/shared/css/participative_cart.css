@@ -260,3 +260,25 @@
   margin-bottom:20px;
   border-bottom:1px solid #ccc;
 }
+
+
+
+
+/*
+ * Contributors page
+ */
+
+
+.carts.contributors h4 {
+  font-weight: bold;
+}
+
+.carts.contributors .contributor {
+ margin-top:15px;
+ border:1px dotted #ccc;
+ padding:15px;
+}
+
+.carts.contributors .title {
+  font-weight: bold;
+}

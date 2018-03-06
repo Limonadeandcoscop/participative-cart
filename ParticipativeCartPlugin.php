@@ -206,6 +206,8 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookPublicItemsShow($args)
     {
+      if (get_option('public_theme') == 'open-jerusalem') return;
+
       $item = $args['item'];
 
       $participativeCartTable = get_db()->getTable('ParticipativeCart');

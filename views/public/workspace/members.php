@@ -139,7 +139,7 @@ echo head(array('title' => $title, 'bodyclass' => 'members'));
                             <option value="<?php echo ParticipativeCartRequest::DELETE_ITEMS_NOTES_COMMENTS ?>">Delete items, notes and comments</option>
                         </select>
                         <input type="submit" value="<?php echo __('Save') ?>">
-                        <a class="delete button" data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('request-id' => $request->id), 'pc_delete_request'); ?>"><?php echo __('Delete') ?></a>
+                        <!--<a class="delete button" data-toggle="modal" data-target="#modal-confirmation" href="<?php echo url(array('request-id' => $request->id), 'pc_delete_request'); ?>"><?php echo __('Delete') ?></a>-->
                     </form>
                 </div>
             </div>

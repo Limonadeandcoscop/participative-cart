@@ -22,7 +22,8 @@ function removeErrorsOnModals() {
 // Handle params replacement for facets
 function updateQueryStringParameter(key, value) {
 
-  uri = window.location.href;
+  var uri = window.location.href;
+  uri = uri.split('#')[0];
 
   // Recherche du séparateur
   var separator = uri.indexOf('?') !== -1 ? "&" : "?";

@@ -37,9 +37,11 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         $this->_helper->db->setDefaultModelName('ParticipativeCart');
 
+        $action = $this->getRequest()->getActionName();
+
         // Redirect to homepage if the user is not logged in
-        if(!$this->_user = current_user()) {
-            $this->redirect($_SERVER['HTTP_REFERER']);
+        if($action != 'contributors' && !$this->_user = current_user()) {
+            //$this->redirect($_SERVER['HTTP_REFERER']);
         }
 
         // Instanciate tables models
@@ -581,32 +583,24 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function contributorsAction() {
 
-        $users = $this->_helper->db->getTable('User')->findAll();
-        $tableNotes = $this->_helper->db->getTable('ParticipativeCartItemNote');
-        $tableComments = $this->_helper->db->getTable('ParticipativeCartItemComment');
-        $tableGuestUsers = $this->_helper->db->getTable('GuestUserInfo');
+        // Get users with public carts
+        $publicCarts = $this->_tableCart->findBy(array('status' => 'public'));
+        $usersIDs = array_unique(array_column($publicCarts, 'user_id'));
 
-        foreach ($users as $user) {
+        foreach ($usersIDs as $user_id) {
 
-            // Retrieve notes
-            $notes = $tableNotes->findBy(array('user_id' => $user->id));
-            foreach($notes as $note) {
-                $contributions[$user->id][] = $note->getCartItem()->id;    
+            // Retrieve user object
+            $contributors[$user_id]['user'] = get_record_by_id("User", $user_id);
+
+            // Retrieve cart
+            $cartsOfUser = $this->_tableCart->findBy(array('user_id' => $user_id,'status' => 'public'));
+            foreach($cartsOfUser as $cart) {
+                $contributors[$user_id]['carts'][] = $cart;
             }
 
-            // Retrieve comments
-            $comments = $tableComments->findBy(array('user_id' => $user->id));
-            foreach($comments as $comment) {
-                $note = get_record_by_id("ParticipativeCartItemNote", $comment->cart_item_note_id);
-                $contributions[$user->id][] = $note->getCartItem()->id;    
-            }   
-
-            // Remove doublons     
-            if (isset($contributions[$user->id]) && is_array($contributions[$user->id]))
-                $contributions[$user->id] = array_unique($contributions[$user->id]);
         }
 
-        $this->view->contributions = $contributions;
+        $this->view->contributors = $contributors;
     }
 
 }

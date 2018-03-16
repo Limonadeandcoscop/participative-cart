@@ -64,6 +64,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart edit'));
 		<p>
 			<?php if (count($cart->getRequests())): ?>
 				<p><?php echo __('Your cart is public and have requests, you can\'t make it private') ?></p>
+				<input type="hidden" name="status" value="<?php if ($cart->status == ParticipativeCart::CART_STATUS_PUBLIC) echo 'public' ?>" />
 			<?php else: ?>
 				<input type="checkbox" <?php if ($nb_items == 0) echo "disabled" ?> name="status" value="public" <?php if ($cart->status == ParticipativeCart::CART_STATUS_PUBLIC) echo 'checked' ?> /><?php echo __('Public') ?>
 				<?php if ($nb_items == 0): ?>

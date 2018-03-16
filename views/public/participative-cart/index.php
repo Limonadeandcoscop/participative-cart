@@ -1,5 +1,5 @@
 <?php
-$title = __('Your carts');
+$title = __('My carts');
 echo head(array('title' => $title, 'bodyclass' => 'carts view'));
 ?>
 

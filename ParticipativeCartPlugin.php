@@ -263,7 +263,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
             return $navLinks;
         }
         $navLinks[1] = array(
-            'label'=> __('Your carts'),
+            'label'=> __('My carts'),
             'class' => 'your-carts-link',
             'uri' => url("cart")
         );

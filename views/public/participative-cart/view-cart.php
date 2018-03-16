@@ -12,7 +12,7 @@ echo head(array('title' => $title, 'bodyclass' => 'cart view'));
 		<div class="owner"><?php echo __('Owner') ?> : <?php echo $cart->getUser()->name ?></div>
 	</h1>
 	<div class="buttons">
-		<a class="back button" href="<?php echo url('cart') ?>"><?php echo __('Back to your carts') ?></a>
+		<a class="back button" href="<?php echo url('cart') ?>"><?php echo __('Back to my carts') ?></a>
 		<?php if ($cart->user_id == current_user()->id): ?>
 			<a class="edit button" href="<?php echo url(array('cart-id' => $cart->id), 'pc_edit_cart'); ?>"><?php echo __('Edit cart') ?></a>
 			<a class="delete button" data-toggle="modal" data-target="#modal-confirmation" data-message="<?php echo __('Are you sure you want to delete this cart and all its items and comments ?') ?>" href="<?php echo url(array('cart-id' => $cart->id), 'pc_delete_cart'); ?>"><?php echo __('Delete cart') ?></a>

@@ -28,7 +28,7 @@ class ParticipativeCartPlugin extends Omeka_Plugin_AbstractPlugin
 {
 
     // Number of results displayed on frontoffice
-    const NB_CARTS_ON_LISTS = 2;
+    const NB_CARTS_ON_LISTS = 10;
 
 
     /**

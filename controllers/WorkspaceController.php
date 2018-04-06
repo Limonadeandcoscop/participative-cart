@@ -38,8 +38,18 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
 
         // Retrieve viewable carts
         $table 	    = $this->_helper->db->getTable('ParticipativeCart');
+
+        // If an item ID is provided, get only the carts with this item commented
+        if (isset($params['item-id'])) {
+            $cartWithItemAnnoted = ParticipativeCartItemNote::getCartsWithItemAnnoted($params['item-id']);
+            $range = implode(',', array_column($cartWithItemAnnoted, 'cart_id'));
+            $params['range'] = $range;
+            $this->view->item = get_record_by_id('Item', $params['item-id']);
+        }    
+
         $carts      = $table::getViewableCartOfUser($params);
         $allCarts   = $table::getViewableCartOfUser(array());
+
 
         // Manage search by tags
         if (isset($tags) && count($tags)) {
@@ -93,6 +103,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         $this->view->refinements    = @$refinements;
         $this->view->params         = $this->getAllParams();
         $this->view->original_uri   = $_SESSION['orginal_uri'];
+
     }
 
 

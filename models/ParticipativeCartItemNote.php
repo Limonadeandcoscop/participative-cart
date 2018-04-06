@@ -108,4 +108,31 @@ class ParticipativeCartItemNote extends Omeka_Record_AbstractRecord
             $comment->delete();
         }
     }
+
+
+    /**
+     * Returns the carts containing a note for the given $item_id
+     *
+     * @param Item $item_id The item ID
+     * @return Array An array of CartItems objects
+     */
+    public static function getCartsWithItemAnnoted($item_id) {
+
+        $tableCartItem = get_db()->getTable('ParticipativeCartItem');
+        $tableCartItemNote = get_db()->getTable('ParticipativeCartItemNote');
+
+        $items = $tableCartItem->findBy(array('item_id' => $item_id));
+
+        $res = array();
+        if (count($items)) {
+            foreach($items as $item) {
+                $items = $tableCartItemNote->findBy(array('cart_item_id' => $item->id));
+                if (count($items)) {
+                    $res[] = $item;
+                }
+            }
+        }
+        return $res;
+    }
+    
 }

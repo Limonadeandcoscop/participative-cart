@@ -251,6 +251,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
 
             if (strlen(trim($rights))) {
 
+
                 // Update request
                 if (!($request = get_record_by_id("ParticipativeCartRequest", $request_id))) {
                     throw new Exception("Invalid request");
@@ -259,6 +260,19 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
                 $request->rights    = $rights;
                 $request->accepted  = date("Y-m-d H:i:s");
                 $request->save();
+
+                // Send a mail to requested
+                $body  = "A user has accepted your request on a cart.<br/><br />";
+                $body .= "User : \"".$cart->getUser()->name."\"<br/>";
+                $body .= "Cart : \"".$cart->name."\"<br/><br />";
+                $url = absolute_url(array('cart-id' => $cart->id), 'pc_view_cart');
+                $body .= "<a href='".$url."'>View cart</a>";
+                
+                $params['to']           = $request->getUser()->email;
+                $params['recipient']    = $request->getUser()->name;
+                $params['subject']      = __("Your cart request has been accepted on OpenJerusalem");
+                $params['body']         = $body;
+                send_mail($params);
             }
         }
 

@@ -603,5 +603,45 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $this->view->contributors = $contributors;
     }
 
+    /**
+     * Change the cart status
+     *
+     * @param Integer (Ajax) $cart-id The ID of the cart
+     * @return HTML
+     */
+    public function switchStatusAction() {
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Check cart ID
+        if (!($cart_id = $this->getParam('cart-id'))) {
+            throw new Exception("The cart ID is required");
+        }
+
+        // Check cart
+        if (!($cart = get_record_by_id("ParticipativeCart", $cart_id))) {
+            throw new Exception("Invalid cart");
+        }
+
+        // Check access rights
+        if ($cart->getUser()->id != current_user()->id && !$cart->userCanWiewCart()) {
+            throw new Exception("You don't have any rights to access this cart");
+        }
+
+
+        $cart = get_record_by_id("ParticipativeCart", $cart_id);
+
+        if ($cart->status == ParticipativeCart::CART_STATUS_PUBLIC) {
+            $cart->status = ParticipativeCart::CART_STATUS_PRIVATE;
+        } else {
+            $cart->status = ParticipativeCart::CART_STATUS_PUBLIC;
+        }
+        $cart->save();
+
+        $json['status']  = $cart->status;
+        echo json_encode($json); // Returns JSON like {"status":"ok"}
+    }
+
 }
 

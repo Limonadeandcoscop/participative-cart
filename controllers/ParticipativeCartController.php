@@ -643,8 +643,12 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
 
         if ($cart->status == ParticipativeCart::CART_STATUS_PUBLIC) {
             $cart->status = ParticipativeCart::CART_STATUS_PRIVATE;
+            $json['title']  = __('Your cart is private');
+            $json['button']  = __('Switch to public');
         } else {
             $cart->status = ParticipativeCart::CART_STATUS_PUBLIC;
+            $json['title']  = __('Your cart is public');
+            $json['button']  = __('Switch to private');
         }
         $cart->save();
 

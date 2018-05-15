@@ -434,6 +434,9 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function viewItemAction() {
 
+        // Redirect user to login page if it isn't identify
+        if (!current_user()) $this->_helper->redirector->goToUrl('users/login');
+
         // Check cart ID
         if (!($cart_id = $this->getParam('cart-id'))) {
             throw new Exception("The cart ID is required");
@@ -614,6 +617,9 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
      */
     public function switchStatusAction() {
 
+        // Redirect user to login page if it isn't identify
+        if (!current_user()) $this->_helper->redirector->goToUrl('users/login');
+        
         // Disable view rendering
         $this->_helper->viewRenderer->setNoRender(true);
 

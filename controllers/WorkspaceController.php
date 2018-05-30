@@ -63,7 +63,7 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
 
         // Manage pagination params
         $perPage    = ParticipativeCartPlugin::NB_CARTS_ON_LISTS;
-        @$start      = $params['page'] == 1 ? 0 : $params['page'];
+        @$start      = $params['page'] == 1 ? 0 : ($params['page']-1) * ParticipativeCartPlugin::NB_CARTS_ON_LISTS;
         $end        = $start + $perPage;
         $pageCarts  = array_slice($carts, $start, $perPage);
 

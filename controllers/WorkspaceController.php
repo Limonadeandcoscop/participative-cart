@@ -154,15 +154,15 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
         $url = absolute_url(array('cart-id' => $cart->id), 'pc_view_cart');
 
         // Send an email to cart owner
-        $body  = "A user has requested an access to your cart.<br/><br />";
+        $body  = "Another user would like to access your cart.<br/><br />";
         $body .= "User : \"".$user->name."\"<br/>";
         $body .= "Cart : \"".$cart->name."\"<br/><br />";
-        $body .= "You can approuve this request at this address : <br/>";
+        $body .= "You can approuve this request: <br/>";
         $body .= "<a href='".$url."'>View cart</a>";
 
         $params['to']           = $cartUser->email;
         $params['recipient']    = $cartUser->name;
-        $params['subject']      = __("New request to access your cart");
+        $params['subject']      = __("New Request to Access Your Cart");
         $params['body']         = $body;
         send_mail($params);
 

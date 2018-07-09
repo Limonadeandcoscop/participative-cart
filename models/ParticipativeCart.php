@@ -124,13 +124,18 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
 
 
     /**
-     * Before delete a cart, delete items in the cart
+     * Before delete a cart, delete items in the cart and requests
      */
     protected function beforeDelete() {
 
         $items = $this->getItems(false);
         foreach ($items as $item) {
             $item->delete();
+        }
+
+        $cartRequests = $cart->getRequests();
+        foreach($cartRequests as $request) {
+            $request->delete();
         }
     }
 

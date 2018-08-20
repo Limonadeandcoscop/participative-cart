@@ -133,7 +133,7 @@ class ParticipativeCart extends Omeka_Record_AbstractRecord
             $item->delete();
         }
 
-        $cartRequests = $cart->getRequests();
+        $cartRequests = $this->getRequests();
         foreach($cartRequests as $request) {
             $request->delete();
         }

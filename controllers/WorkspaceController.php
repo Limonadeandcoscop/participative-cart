@@ -194,8 +194,12 @@ class ParticipativeCart_WorkspaceController extends Omeka_Controller_AbstractAct
             throw new Exception("Invalid request");
         }
 
-        $request->status = ParticipativeCart::REQUEST_STATUS_WAITING;
-        $request->save();
+        if ($request->status == ParticipativeCart::REQUEST_STATUS_WAITING) {
+            $request->delete();
+        } else {
+            $request->status = ParticipativeCart::REQUEST_STATUS_WAITING;
+            $request->save();
+        }
 
         $this->_helper->redirector->gotoRoute(array('cart-id' => $request->cart_id), 'pc_members');
     }

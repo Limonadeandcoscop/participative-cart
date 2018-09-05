@@ -115,7 +115,7 @@ class ParticipativeCart_ParticipativeCartController extends Omeka_Controller_Abs
         $this->_helper->db->setDefaultModelName('ParticipativeCartItem');
         $pluralName = $this->view->pluralize($this->_helper->db->getDefaultModelName());
         $params['cart_id'] = $cart->id;
-        $recordsPerPage = 10;
+        $recordsPerPage = 100;
         $currentPage    = $this->getParam('page', 1);
         $items_in_cart  = $this->_helper->db->findBy($params, $recordsPerPage, $currentPage);
 
